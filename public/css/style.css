@@ -53,7 +53,7 @@ body {
   justify-content: center;
 }
 /* card */
-.card {
+.listing-card {
   border: none !important;
   margin-bottom: 2rem;
 }

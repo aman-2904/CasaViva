@@ -5,10 +5,11 @@ const ejsmate = require("ejs-mate");
 const path = require("path");
 const mongoose = require("mongoose");
 const Listing = require("./models/listing");
+const Review = require("./models/review");
 const methodOverride = require("method-override");
 const wrapAsync = require("./utils/wrapAsync.js")
 const ExpressError = require("./utils/ExpressError");
-const { listingSchema } = require("./schema.js");
+const { listingSchema, reviewSchema } = require("./schema.js");
 
 
 app.engine("ejs",ejsmate);
@@ -30,6 +31,16 @@ main().then(() => console.log("Connected to DB")).catch(err => console.log(err))
 
 const validateListing =(req,res,next)=>{
     let {error} = listingSchema.validate(req.body);
+    if(error){
+        let errMessage = error.details.map(el => el.message).join(",");
+        next(new ExpressError(400,errMessage));
+    }else{
+        next();
+    }
+}
+
+const validateReview =(req,res,next)=>{
+    let {error} = reviewSchema.validate(req.body);
     if(error){
         let errMessage = error.details.map(el => el.message).join(",");
         next(new ExpressError(400,errMessage));
@@ -79,11 +90,33 @@ app.delete("/listings/:id",wrapAsync(async(req,res)=>{
     res.redirect("/listings");
 }));
 
+//Reviews ROUTE
+app.post("/listings/:id/reviews",validateReview,wrapAsync(async(req,res)=>{
+    let listing = await Listing.findById(req.params.id); 
+    let newReview = new Review(req.body.review);
+
+    listing.reviews.push(newReview);
+
+    await newReview.save();
+    await listing.save();
+
+    console.log(newReview);
+    res.redirect(`/listings/${req.params.id}`);
+}));
+
+//DELETE REVIEW ROUTE
+app.delete("/listings/:id/reviews/:reviewId",wrapAsync(async(req,res)=>{
+    let {id,reviewId}=req.params;
+    await Listing.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/listings/${id}`);
+}))
+
 
 // SHOW ROUTE
 app.get("/listings/:id",wrapAsync(async(req,res)=>{
     let {id}=req.params;
-    let listing = await Listing.findById(id);
+    let listing = await Listing.findById(id).populate("reviews");
     res.render("listings/show.ejs",{listing})
     }));
 
