@@ -35,8 +35,18 @@ router.post(
   "/",
   validateListing,
   wrapAsync(async (req, res, next) => {
+    const listingData = req.body.listing;
+
+    // Ensure `image` is always an object with default properties
+    if (!listingData.image) {
+        listingData.image = {
+            url: "https://media.cntraveler.com/photos/53da60a46dec627b149e66f4/master/w_1600%2Cc_limit/hilton-moorea-lagoon-resort-spa-moorea-french-poly--110160-1.jpg",
+            filename: "default.jpg",
+        };
+    }
     let newlisting = new Listing(req.body.listing);
     await newlisting.save();
+    req.flash("success","New Listing Created!");
     res.redirect("/listings");
   })
 );

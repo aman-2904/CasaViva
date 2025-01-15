@@ -8,6 +8,8 @@ const methodOverride = require("method-override");
 const ExpressError = require("./utils/ExpressError");
 const listings = require("./routes/listings");
 const reviews = require("./routes/review");
+const session = require("express-session");
+const flash = require("connect-flash");
 
 app.engine("ejs", ejsmate);
 
@@ -25,6 +27,25 @@ async function main() {
 main()
   .then(() => console.log("Connected to DB"))
   .catch((err) => console.log(err));
+
+const sessionOptions = {
+    secret: "thisshouldbeabettersecret!",
+    resave: false,
+    saveUninitialized: true,
+    cookie:{
+        expires: Date.now() + 7*24*60*60*1000,
+        maxAge: 7*24*60*60*1000,
+        httpOnly: true,
+    }
+}
+
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use((req,res,next)=>{
+    res.locals.success = req.flash("success");
+    next();
+})
 
 app.use("/listings", listings);
 app.use("/listings/:id/reviews", reviews);
