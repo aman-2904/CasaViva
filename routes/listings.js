@@ -4,6 +4,7 @@ const Listing = require("../models/listing");
 const { listingSchema, reviewSchema } = require("../schema.js");
 const wrapAsync = require("../utils/wrapAsync.js");
 const ExpressError = require("../utils/ExpressError");
+const { isLoggedIn } = require("../middleware.js");
 
 const validateListing = (req, res, next) => {
   let { error } = listingSchema.validate(req.body);
@@ -25,7 +26,7 @@ router.get(
 
 // NEW ROUTE
 
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
   res.render("listings/new.ejs");
 });
 
@@ -33,20 +34,22 @@ router.get("/new", (req, res) => {
 
 router.post(
   "/",
+  isLoggedIn,
   validateListing,
   wrapAsync(async (req, res, next) => {
     const listingData = req.body.listing;
 
     // Ensure `image` is always an object with default properties
     if (!listingData.image) {
-        listingData.image = {
-            url: "https://media.cntraveler.com/photos/53da60a46dec627b149e66f4/master/w_1600%2Cc_limit/hilton-moorea-lagoon-resort-spa-moorea-french-poly--110160-1.jpg",
-            filename: "default.jpg",
-        };
+      listingData.image = {
+        url: "https://media.cntraveler.com/photos/53da60a46dec627b149e66f4/master/w_1600%2Cc_limit/hilton-moorea-lagoon-resort-spa-moorea-french-poly--110160-1.jpg",
+        filename: "default.jpg",
+      };
     }
     let newlisting = new Listing(req.body.listing);
+    newlisting.owner =req.user._id;
     await newlisting.save();
-    req.flash("success","New Listing Created!");
+    req.flash("success", "New Listing Created!");
     res.redirect("/listings");
   })
 );
@@ -54,11 +57,12 @@ router.post(
 // EDIT ROUTE
 router.get(
   "/:id/edit",
+  isLoggedIn,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     let listing = await Listing.findById(id);
-    if(!listing){
-      req.flash("error","No such listing exists!");
+    if (!listing) {
+      req.flash("error", "No such listing exists!");
       res.redirect("/listings");
     }
     res.render("listings/edit.ejs", { listing });
@@ -68,6 +72,7 @@ router.get(
 // UPDATE ROUTE
 router.put(
   "/:id",
+  isLoggedIn,
   validateListing,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
@@ -81,7 +86,7 @@ router.put(
       };
     }
     await Listing.findByIdAndUpdate(id, req.body.listing);
-    req.flash("success","Listing Updated!");
+    req.flash("success", "Listing Updated!");
     res.redirect(`/listings/${id}`);
   })
 );
@@ -89,10 +94,11 @@ router.put(
 // DELETE ROUTE
 router.delete(
   "/:id",
+  isLoggedIn,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     await Listing.findByIdAndDelete(id);
-    req.flash("success","Listing Deleted!");
+    req.flash("success", "Listing Deleted!");
     res.redirect("/listings");
   })
 );
@@ -102,9 +108,11 @@ router.get(
   "/:id",
   wrapAsync(async (req, res) => {
     let { id } = req.params;
-    let listing = await Listing.findById(id).populate("reviews");
-    if(!listing){
-      req.flash("error","No such listing exists!");
+    let listing = await Listing.findById(id)
+      .populate("reviews")
+      .populate("owner");
+    if (!listing) {
+      req.flash("error", "No such listing exists!");
       res.redirect("/listings");
     }
     res.render("listings/show.ejs", { listing });
