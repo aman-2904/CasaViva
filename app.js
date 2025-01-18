@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV != "production") {
+  require("dotenv").config();
+};
 const express = require("express");
 const app = express();
 const port = 3000;
@@ -10,10 +13,12 @@ const listingsRouter = require("./routes/listings");
 const reviewsRouter = require("./routes/review");
 const userRouter = require("./routes/user");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user");
+const dbUrl = process.env.ATLASDB_URL;
 
 app.engine("ejs", ejsmate);
 
@@ -26,22 +31,33 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
 async function main() {
-  await mongoose.connect("mongodb://localhost:27017/wanderlust");
+  await mongoose.connect(dbUrl);
 }
 main()
   .then(() => console.log("Connected to DB"))
   .catch((err) => console.log(err));
 
+  const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto:{
+      secret:process.env.SECRET
+    },
+    touchAfter: 24 * 60 * 60
+  })
+  store.on("error",()=>{
+    console.log*("ERROR IN MONGO SESSION STORE",err);
+  })
 const sessionOptions = {
-    secret: "thisshouldbeabettersecret!",
-    resave: false,
-    saveUninitialized: true,
-    cookie:{
-        expires: Date.now() + 7*24*60*60*1000,
-        maxAge: 7*24*60*60*1000,
-        httpOnly: true,
-    }
-}
+  store,
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  },
+};
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -52,11 +68,11 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use((req,res,next)=>{
-    res.locals.success = req.flash("success");
-    res.locals.error = req.flash("error");
-    res.locals.currUser = req.user;
-    next();
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  res.locals.currUser = req.user;
+  next();
 });
 
 // app.get("/demouser",async(req,res)=>{
@@ -72,9 +88,9 @@ app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
 app.use("/", userRouter);
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+// app.get("/", (req, res) => {
+//   res.send("Hello World!");
+// });
 
 app.all("*", (req, res, next) => {
   next(new ExpressError(404, "Page not found!!"));

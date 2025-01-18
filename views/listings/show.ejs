@@ -1,5 +1,8 @@
 <% layout("/layouts/boilerplate") %>
-
+<script>
+  const mapToken = "<%= process.env.MAP_TOKEN %>";
+  const listing = <%- JSON.stringify(listing) %>;
+</script>
 <body>
   <div class="row">
     <div class="col-8 offset-3 mt-3">
@@ -16,7 +19,7 @@
           Owned by -: <b><%= listing.owner.username %></b>
         </p>
         <p class="card-text"><%= listing.description %></p>
-        <p class="card-text">&#8377<%= listing.price.toLocaleString("en-IN") %></p>
+        <p class="card-text"> &#8377;<%= listing.price.toLocaleString("en-IN") %></p>
         <p class="card-text"><%= listing.location %></p>
         <p class="card-text"><%= listing.country %></p>
       </div>
@@ -113,6 +116,7 @@
     </div>
     <% } %>
     <hr />
+    <% if(listing.reviews.length > 0){ %>
     <div class="col-8 offset-3 mt-3 mb-3">
       <h2><b> Reviews </b></h2>
       <div class="row">
@@ -137,7 +141,13 @@
       </div>
     </div>
     <br />
-
+    <hr>
+    <% } %>
+    <div class="col-6 offset-3 mt-3 mb-3">
+      <h3><b>Where you'll be</b></h3>
+      <div id="map"></div>
+    </div>
     <!-- toLocaleString() is used to convert numbers into local standard form with commmas n points here indian code is en-IN -->
   </div>
+  <script src="/js/map.js"></script>
 </body>

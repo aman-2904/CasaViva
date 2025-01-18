@@ -69,21 +69,26 @@ body {
   font-weight: 400 !important;
 }
 /* listing link */
-.listing-link{
-    text-decoration: none;
+.listing-link {
+  text-decoration: none;
 }
-.card-img-overlay{
-    opacity: 0;
+.card-img-overlay {
+  opacity: 0;
 }
-.card-img-overlay:hover{
-    opacity: 0.2;
-    cursor: pointer;
-    background-color: white;
+.card-img-overlay:hover {
+  opacity: 0.2;
+  cursor: pointer;
+  background-color: white;
 }
-.add-btn{
-    background-color: #fe424d !important;
-    border: none !important;
+.add-btn {
+  background-color: #fe424d !important;
+  border: none !important;
 }
-.show-img{
-    height: 30vh !important;
+.show-img {
+  height: 30vh !important;
+}
+/* MAP */
+#map {
+  height:380px;
+  width: 50vw;
 }
