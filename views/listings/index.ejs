@@ -1,22 +1,29 @@
 <% layout("/layouts/boilerplate") %>
 <style>
-  #filters {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    margin-top: 1rem;
+  .add-btn {
+    color: white;
+  }
+  .add-btn:hover {
+    color: white !important;
   }
   .filter {
     text-align: center;
-    margin-right: 2rem;
+    margin: 0.5rem;
     opacity: 0.7;
+    transition: all 0.3s ease-in-out;
   }
   .filter:hover {
     opacity: 1;
     cursor: pointer;
   }
-  .filter p {
-    font-size: 0.8rem;
+  .filter a {
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .filter a:hover {
+    font-size: 1.1rem;
   }
   .tax-info {
     display: none;
@@ -25,84 +32,162 @@
     border: 1px solid black;
     border-radius: 1rem;
     height: 3.25rem;
+    width: 260px;
     padding: 1rem;
     margin-left: 3rem;
     display: flex;
     align-items: center;
   }
+  .card-img-top {
+    height: 20rem;
+  }
+  @media screen and (max-width: 1200px) {
+    .tax-info {
+      display: block;
+    }
+    .tax-toggle {
+      margin-left: 4px; /* Align tax toggle properly */
+    }
+    .filter a {
+      font-size: 0.7rem;
+    }
+    .filter a:hover {
+      font-size: 0.8rem;
+    }
+  }
+  @media (max-width: 992px) {
+    .tax-toggle {
+      margin-top: 1rem;
+      margin-left: 10px;
+    }
+  }
+  @media (min-width: 576px) and (max-width: 768px) {
+    .row-cols-md-3 > * {
+      width: 50% !important;
+    }
+  }
+  @media (max-width: 768px) {
+    #filters {
+      justify-content: center; /* Center filters on smaller screens */
+    }
+  }
+  @media (max-width: 576px) {
+    .filter {
+      margin: 0.2rem;
+    }
+    .filter a {
+      font-size: 0.8rem;
+    }
+    .card-img-top {
+      height: 15rem; /* Adjust image height for smaller screens */
+    }
+  }
 </style>
 <body>
-  <div id="filters">
-    <div class="filter">
-      <div><i class="fa-solid fa-fire"></i></div>
-      <p>Trendings</p>
-    </div>
-    <div class="filter">
-      <div><i class="fa-solid fa-bed"></i></div>
-      <p>Rooms</p>
-    </div>
-    <div class="filter">
-      <div><i class="fa-solid fa-mountain-city"></i></div>
-      <p>Iconic Cities</p>
-    </div>
-    <div class="filter">
-      <div><i class="fa-solid fa-mountain"></i></div>
-      <p>Mountains</p>
-    </div>
-    <div class="filter">
-      <div><i class="fa-brands fa-fort-awesome"></i></div>
-      <p>Castles</p>
-    </div>
-    <div class="filter">
-      <div><i class="fa-solid fa-person-swimming"></i></div>
-      <p>Amazing Pools</p>
-    </div>
-    <div class="filter">
-      <div><i class="fa-solid fa-campground"></i></div>
-      <p>Camping</p>
-    </div>
-    <div class="filter">
-      <div><i class="fa-solid fa-tractor"></i></div>
-      <p>Farms</p>
-    </div>
-    <div class="filter">
-      <div><i class="fa-regular fa-snowflake"></i></div>
-      <p>Arctic</p>
-    </div>
-    <div class="tax-toggle">
-      <div class="form-check-reverse form-switch">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          role="switch"
-          id="flexSwitchCheckDefault"
-        />
-        <label class="form-check-label" for="flexSwitchCheckDefault"
-          >Display total after taxes</label
-        >
+  <div class="container filters">
+    <button
+      class="btn add-btn d-lg-none"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#filterCollapse"
+      aria-expanded="false"
+      aria-controls="filterCollapse"
+    >
+      Filters
+    </button>
+
+    <div class="collapse d-lg-flex flex-wrap" id="filterCollapse">
+      <div class="filter">
+        <a href="/listings?category=Trendings" class="btn btn-category">
+          <div><i class="fa-solid fa-fire"></i></div>
+          <p>Trendings</p>
+        </a>
+      </div>
+      <div class="filter">
+        <a href="/listings?category=Rooms" class="btn btn-category">
+          <div><i class="fa-solid fa-bed"></i></div>
+          <p>Rooms</p>
+        </a>
+      </div>
+      <div class="filter">
+        <a href="/listings?category=Iconic Cities" class="btn btn-category">
+          <div><i class="fa-solid fa-mountain-city"></i></div>
+          <p>Iconic Cities</p>
+        </a>
+      </div>
+      <div class="filter">
+        <a href="/listings?category=Mountains" class="btn btn-category">
+          <div><i class="fa-solid fa-mountain"></i></div>
+          <p>Mountains</p>
+        </a>
+      </div>
+      <div class="filter">
+        <a href="/listings?category=Castles" class="btn btn-category">
+          <div><i class="fa-brands fa-fort-awesome"></i></div>
+          <p>Castles</p>
+        </a>
+      </div>
+      <div class="filter">
+        <a href="/listings?category=Amazing Pools" class="btn btn-category">
+          <div><i class="fa-solid fa-person-swimming"></i></div>
+          <p>Amazing Pools</p>
+        </a>
+      </div>
+      <div class="filter">
+        <a href="/listings?category=Camping" class="btn btn-category">
+          <div><i class="fa-solid fa-campground"></i></div>
+          <p>Camping</p>
+        </a>
+      </div>
+      <div class="filter">
+        <a href="/listings?category=Farms" class="btn btn-category">
+          <div><i class="fa-solid fa-tractor"></i></div>
+          <p>Farms</p>
+        </a>
+      </div>
+      <div class="filter">
+        <a href="/listings?category=Arctic" class="btn btn-category">
+          <div><i class="fa-regular fa-snowflake"></i></div>
+          <p>Arctic</p>
+        </a>
       </div>
     </div>
   </div>
-  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
-    <% for(listing of allListings){ %>
-    <a href="/listings/<%= listing._id %>" class="listing-link">
-      <div class="card listing-card col">
-        <img
-          src="<%= listing.image.url %>"
-          class="card-img-top"
-          alt="listing_image"
-          style="height: 20rem"
-        />
-        <div class="card-img-overlay"></div>
-        <div class="card-body">
-          <p class="card-text">
-            <b><%= listing.title %></b><br />
-            &#8377 <%= listing.price.toLocaleString("en-IN") %> / Night
-            <i class="tax-info">&nbsp; &nbsp; +18% GST</i> <br />
-          </p>
+  <div class="tax-toggle">
+    <div class="form-check-reverse form-switch">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        role="switch"
+        id="flexSwitchCheckDefault"
+      />
+      <label class="form-check-label" for="flexSwitchCheckDefault"
+        >Display total after taxes</label
+      >
+    </div>
+  </div>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 mt-3">
+    <% if (listings.length === 0) { %>
+    <h2 class="col-12 text-center">No listings found.</h2>
+    <% } else { %> <% listings.forEach(listing => { %>
+    <div class="col">
+      <a href="/listings/<%= listing._id %>" class="listing-link">
+        <div class="card listing-card">
+          <img
+            src="<%= listing.image.url %>"
+            class="card-img-top"
+            alt="listing_image"
+          />
+          <div class="card-body">
+            <p class="card-text">
+              <b><%= listing.title %></b><br />
+              &#8377<%= listing.price.toLocaleString("en-IN") %> / Night
+              <i class="tax-info">&nbsp; &nbsp; +18% GST</i><br />
+            </p>
+          </div>
         </div>
-      </div>
-    </a>
-    <% } %>
+      </a>
+    </div>
+    <% }) %> <% } %>
   </div>
 </body>

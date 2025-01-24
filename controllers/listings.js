@@ -4,15 +4,66 @@ const mapToken = process.env.MAP_TOKEN;
 
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
-//INDEX
+// INDEX + SEARCH + CATEGORY FILTER
 module.exports.index = async (req, res) => {
-  let allListings = await Listing.find({});
-  res.render("listings/index.ejs", { allListings });
+  const searchQuery = req.query.query || ""; // Get search query
+  const category = req.query.category || ""; // Get category filter
+
+  try {
+    let listings;
+
+    if (searchQuery || category) {
+      // Filter by search query and/or category
+      const filters = {};
+      if (searchQuery) {
+        filters.$or = [
+          { location: { $regex: searchQuery, $options: "i" } }, // Case-insensitive match
+          { country: { $regex: searchQuery, $options: "i" } },
+        ];
+      }
+      if (category) {
+        filters.category = category; // Match exact category
+      }
+
+      listings = await Listing.find(filters);
+    } else {
+      // Fetch all listings if no filters
+      listings = await Listing.find();
+    }
+
+    // Render the index.ejs page with the listings and filters
+    res.render("listings/index", {
+      listings,
+      searchQuery,
+      category,
+    });
+  } catch (error) {
+    console.error(error);
+    res.render("listings/index", {
+      listings: [],
+      searchQuery: "",
+      category: "",
+      error: "Error fetching listings. Please try again later.",
+    });
+  }
 };
 
 //NEW
 module.exports.new = (req, res) => {
-  res.render("listings/new.ejs");
+  res.render("listings/new", {
+    searchQuery: "",
+    category: [
+      "Trendings",
+      "Rooms",
+      "Iconic Cities",
+      "Mountains",
+      "Castles",
+      "Amazing Pools",
+      "Camping",
+      "Farms",
+      "Arctic",
+    ],
+  });
 };
 
 // CREATE
@@ -20,7 +71,7 @@ module.exports.create = async (req, res, next) => {
   let response = await geocodingClient
     .forwardGeocode({
       query: req.body.listing.location,
-      limit: 1, 
+      limit: 1,
     })
     .send();
   let url = req.file.path;
@@ -54,7 +105,22 @@ module.exports.edit = async (req, res) => {
   }
   let originalImageUrl = listing.image.url;
   originalImageUrl = originalImageUrl.replace("/upload", "/upload/h_250,w_300");
-  res.render("listings/edit.ejs", { listing, originalImageUrl });
+  res.render("listings/edit.ejs", {
+    listing,
+    originalImageUrl,
+    searchQuery: "",
+    category: [
+      "Trendings",
+      "Rooms",
+      "Iconic Cities",
+      "Mountains",
+      "Castles",
+      "Amazing Pools",
+      "Camping",
+      "Farms",
+      "Arctic",
+    ],
+  });
 };
 
 //UPDATE
@@ -103,5 +169,19 @@ module.exports.show = async (req, res) => {
     req.flash("error", "No such listing exists!");
     res.redirect("/listings");
   }
-  res.render("listings/show.ejs", { listing });
+  res.render("listings/show.ejs", {
+    listing,
+    searchQuery: "",
+    category: [
+      "Trendings",
+      "Rooms",
+      "Iconic Cities",
+      "Mountains",
+      "Castles",
+      "Amazing Pools",
+      "Camping",
+      "Farms",
+      "Arctic",
+    ],
+  });
 };
