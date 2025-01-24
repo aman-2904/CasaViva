@@ -37,16 +37,18 @@
     margin-left: 3rem;
     display: flex;
     align-items: center;
+    justify-content: space-between;
   }
   .card-img-top {
     height: 20rem;
   }
   @media screen and (max-width: 1200px) {
     .tax-info {
-      display: block;
+      display: none;
     }
     .tax-toggle {
-      margin-left: 4px; /* Align tax toggle properly */
+      margin-left: 4px;
+      margin-top: 1rem; /* Ensure it aligns properly in smaller screens */
     }
     .filter a {
       font-size: 0.7rem;
@@ -56,9 +58,18 @@
     }
   }
   @media (max-width: 992px) {
+    .tax-info {
+      display: none;
+    }
     .tax-toggle {
       margin-top: 1rem;
       margin-left: 10px;
+    }
+    .filter a {
+      font-size: 0.7rem;
+    }
+    .filter a:hover {
+      font-size: 0.8rem;
     }
   }
   @media (min-width: 576px) and (max-width: 768px) {
@@ -69,6 +80,12 @@
   @media (max-width: 768px) {
     #filters {
       justify-content: center; /* Center filters on smaller screens */
+    }
+    .filter {
+      margin: 0.2rem;
+    }
+    .filter a {
+      font-size: 0.8rem;
     }
   }
   @media (max-width: 576px) {

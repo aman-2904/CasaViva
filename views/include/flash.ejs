@@ -1,9 +1,47 @@
+<style>
+  .alert-box {
+    display: flex;
+    justify-content: space-between; /* Space between the message and the close button */
+    align-items: center; /* Center the content vertically */
+    border-radius: 15px;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+  }
+
+  .alert-box .alert-content {
+    flex: 1; /* Take up remaining space for text */
+    text-align: center; /* Center the text inside the alert */
+  }
+
+  .alert-box .btn-close {
+    margin-left: 1rem; /* Space between message and close button */
+  }
+
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .alert-box {
+      width: 90% !important; /* Take up more space on smaller screens */
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+  @media (min-width: 769px) {
+    .alert-box {
+      width: 50% !important; /* Restrict size on larger screens */
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+</style>
+
 <% if(success && success.length > 0){ %>
 <div
-  class="alert alert-success alert-dismissible fade show col-6 offset-3"
+  class="alert alert-success alert-dismissible fade show alert-box"
   role="alert"
 >
-  <%= success %>
+  <div class="alert-content">
+    <%= success %>
+  </div>
   <button
     type="button"
     class="btn-close"
@@ -11,12 +49,16 @@
     aria-label="Close"
   ></button>
 </div>
-<% } %> <% if(error && error.length > 0){ %>
+<% } %>
+
+<% if(error && error.length > 0){ %>
 <div
-  class="alert alert-danger alert-dismissible fade show col-6 offset-3"
+  class="alert alert-danger alert-dismissible fade show alert-box"
   role="alert"
 >
-  <%= error %>
+  <div class="alert-content">
+    <%= error %>
+  </div>
   <button
     type="button"
     class="btn-close"
