@@ -1,25 +1,42 @@
 const User = require("../models/user.js");
 
-module.exports.signupForm = (req, res) => {
-  res.render("users/signup.ejs");
+module.exports.hostSignupForm = (req, res) => {
+  res.render("users/hostSignup");
 };
 
-module.exports.signup = async (req, res) => {
+module.exports.guestSignupForm = (req, res) => {
+  res.render("users/guestSignup");
+};
+
+module.exports.hostSignup = async (req, res, next) => {
   try {
-    let { username, email, password } = req.body;
-    const newUser = new User({ email, username });
-    const registeredUser = await User.register(newUser, password);
-    console.log(registeredUser);
+    const { username, email, password } = req.body;
+    const user = new User({ username, email, role: "host" });
+    const registeredUser = await User.register(user, password);
     req.login(registeredUser, (err) => {
-      if (err) {
-        return next(err);
-      }
-      req.flash("success", "Welcome to Wanderlust");
+      if (err) return next(err);
+      req.flash("success", "Welcome, Host!");
+      res.redirect("/host/dashboard");
+    });
+  } catch (e) {
+    req.flash("error", e.message);
+    res.redirect("/signup/host");
+  }
+};
+
+module.exports.guestSignup = async (req, res, next) => {
+  try {
+    const { username, email, password } = req.body;
+    const user = new User({ username, email, role: "guest" });
+    const registeredUser = await User.register(user, password);
+    req.login(registeredUser, (err) => {
+      if (err) return next(err);
+      req.flash("success", "Welcome, Guest!");
       res.redirect("/listings");
     });
   } catch (e) {
     req.flash("error", e.message);
-    res.redirect("/signup");
+    res.redirect("/signup/guest");
   }
 };
 
@@ -29,9 +46,14 @@ module.exports.loginForm = (req, res) => {
 
 module.exports.login = async (req, res) => {
   req.flash("success", "Welcome back to Wanderlust");
-  let redirectUrl = res.locals.redirectUrl || "/listings";
-  res.redirect(redirectUrl);
+  const user = req.user;
+  if (user.role === "host") {
+    res.redirect("/host/dashboard");
+  } else {
+    res.redirect("/listings");
+  }
 };
+
 
 module.exports.logout = (req, res, next) => {
   req.logout((err) => {

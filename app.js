@@ -9,7 +9,10 @@ const path = require("path");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const ExpressError = require("./utils/ExpressError");
+const indexRoutes = require("./routes/index");
+const bookingRoutes = require("./routes/booking");
 const listingsRouter = require("./routes/listings");
+const hostRoutes = require("./routes/host");
 const reviewsRouter = require("./routes/review");
 const userRouter = require("./routes/user");
 const session = require("express-session");
@@ -84,13 +87,14 @@ app.use((req, res, next) => {
 //   res.send(registeredUser);
 // })
 
+app.use("/", indexRoutes); 
+app.use("/host", hostRoutes);
 app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
+app.use("/booking", bookingRoutes);
 app.use("/", userRouter);
 
-// app.get("/", (req, res) => {
-//   res.send("Hello World!");
-// });
+
 
 app.all("*", (req, res, next) => {
   next(new ExpressError(404, "Page not found!!"));

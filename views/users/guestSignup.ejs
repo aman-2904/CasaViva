@@ -1,0 +1,94 @@
+<% layout('/layouts/boilerplate') %>
+
+<style>
+  .signup-container {
+    max-width: 450px;
+    margin: 80px auto;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+
+  .signup-container h2 {
+    text-align: center;
+    color: #dc3545;
+    font-weight: 700;
+    margin-bottom: 2rem;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .form-control {
+    border-radius: 999px;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+  }
+
+  .form-control::placeholder {
+    color: #999;
+  }
+
+  .signup-btn {
+    width: 100%;
+    background-color: #dc3545;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem;
+    border-radius: 999px;
+    transition: background-color 0.3s ease;
+  }
+
+  .signup-btn:hover {
+    background-color: #dc3545;
+  }
+
+  .login-link {
+    text-align: center;
+    margin-top: 1rem;
+    color: #555;
+  }
+
+  .login-link a {
+    color: #dc3545;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+  .signup-container {
+    max-width: 450px;
+    margin: 80px auto;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 60px rgba(255, 105, 135, 0.25); /* Light pink shadow */
+    background-color: #fff;
+  }
+</style>
+
+<div class="signup-container">
+  <h2>Guest Sign Up</h2>
+  <form action="/signup/guest" method="POST">
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" name="username" class="form-control" placeholder="Enter your username" required />
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" name="email" class="form-control" placeholder="Enter your email" required />
+    </div>
+    <div class="mb-4">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" name="password" class="form-control" placeholder="Create a password" required />
+    </div>
+    <button type="submit" class="btn signup-btn">Sign Up as Guest</button>
+  </form>
+  <div class="login-link">
+    Already have an account? <a href="/login">Login</a>
+  </div>
+</div>

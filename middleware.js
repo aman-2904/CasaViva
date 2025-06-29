@@ -58,3 +58,18 @@ module.exports.isAuthor =async (req,res,next)=>{
     }
     next();
 }
+module.exports.isHost = (req, res, next) => {
+  if (req.isAuthenticated() && req.user.role === "host") {
+    return next();
+  }
+  req.flash("error", "You must be a host to access this page.");
+  res.redirect("/login");
+};
+
+module.exports.isGuest = (req, res, next) => {
+  if (req.isAuthenticated() && req.user.role === "guest") {
+    return next();
+  }
+  req.flash("error", "You must be a guest to access this page.");
+  res.redirect("/login");
+};

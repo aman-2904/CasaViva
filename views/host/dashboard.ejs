@@ -1,0 +1,263 @@
+<% layout('/layouts/boilerplate') %>
+
+<style>
+  .dashboard-heading {
+    margin-top: 2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .listing-card {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .listing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  }
+
+  .listing-image-container {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+  }
+
+  .listing-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .listing-card:hover .listing-image-container img {
+    transform: scale(1.05);
+  }
+
+  .badge-label {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: #ff385c;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 20px;
+  }
+
+  .card-body {
+    padding: 1.5rem !important;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .location-rating {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 0.4rem;
+  }
+
+  .listing-title {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #d63384;
+    margin-bottom: 0.5rem;
+  }
+
+  .listing-meta {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.8rem;
+  }
+
+  .pill-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 1rem;
+  }
+
+  .pill {
+    background-color: #f1f3f5;
+    color: #333;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-weight: 500;
+  }
+
+  .price-cta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+  }
+
+  .price {
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .btn-details {
+    background-color: #e91e63;
+    color: white;
+    font-size: 0.85rem;
+    padding: 0.4rem 1.2rem;
+    border: none;
+    border-radius: 50px;
+    transition: background 0.3s ease;
+  }
+
+  .btn-details:hover {
+    background-color: #c2185b;
+  }
+
+  .dashboard-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    gap: 1.5rem;
+  }
+
+  .dashboard-tab {
+    cursor: pointer;
+    border: 1px solid #ddd;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .dashboard-tab.active,
+  .dashboard-tab:hover {
+    background-color: #ff385c;
+    color: white;
+    border-color: #ff385c;
+  }
+</style>
+
+<div class="container">
+  <div class="text-center dashboard-heading">
+    <h2>Welcome, <%= currentUser.username %>!</h2>
+    <p class="text-muted">Manage your listings here</p>
+  </div>
+
+  <!-- Tabs Section -->
+  <div class="dashboard-tabs">
+    <div id="tab-listings" class="dashboard-tab active">Listings (<%= listings.length %>)</div>
+    <div id="tab-bookings" class="dashboard-tab">Bookings (<%= bookings.length %>)</div>
+  </div>
+
+  <!-- Listings Section -->
+  <div id="listings-section">
+    <% if (listings.length === 0) { %>
+      <div class="alert alert-info text-center">
+        <p>You haven’t created any listings yet.</p>
+        <a href="/listings/new" class="btn btn-warning mt-2">Create Your First Listing</a>
+      </div>
+    <% } else { %>
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <% listings.forEach(listing => { %>
+          <div class="col">
+            <div class="card listing-card">
+              <div class="listing-image-container">
+                <img src="<%= listing.image.url %>" alt="Listing Image" />
+                <div class="badge-label">Superhost</div>
+              </div>
+              <div class="card-body">
+                <div class="location-rating">
+                  <span><i class="fas fa-map-marker-alt text-muted me-1"></i> <%= listing.location %></span>
+                  <span><i class="fas fa-star text-warning"></i> <%= listing.reviews.length %></span>
+                </div>
+
+                <div class="listing-title"><%= listing.title %></div>
+
+                <div class="listing-meta">
+                  <i class="fas fa-user-friends me-2"></i> Up to 6 guests
+                </div>
+
+                <div class="pill-container">
+                  <div class="pill">WiFi</div>
+                  <div class="pill">Hot Tub</div>
+                  <div class="pill">Fireplace</div>
+                  <div class="pill">+ More</div>
+                </div>
+
+                <div class="price-cta">
+                  <span class="price">₹ <%= listing.price.toLocaleString("en-IN") %></span>
+                  <a href="/listings/<%= listing._id %>" class="btn btn-details">View Details</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- Bookings Section -->
+<div id="bookings-section" style="display:none;">
+  <% if (bookings.length === 0) { %>
+    <div class="alert alert-info text-center">No bookings yet on your listings.</div>
+  <% } else { %>
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+      <% bookings.forEach(booking => { %>
+        <div class="col">
+          <div class="card shadow-sm border border-1">
+            <div class="card-body">
+              <h5 class="card-title"><%= booking.listing.title %></h5>
+              <p class="card-text">
+                <i class="bi bi-person-fill"></i> <strong>Booked by:</strong> <%= booking.user.username %><br>
+                <i class="bi bi-calendar-date"></i> <strong>Booked on:</strong> <%= booking.createdAt.toLocaleDateString("en-IN") %><br>
+                <i class="bi bi-clock-fill"></i> <strong>Status:</strong> 
+                <span class="badge bg-<%= booking.status === 'confirmed' ? 'success' : booking.status === 'cancelled' ? 'danger' : 'warning' %> text-capitalize">
+                  <%= booking.status %>
+                </span>
+              </p>
+
+              <% if (booking.status === "pending") { %>
+                <div class="d-flex gap-2">
+                  <form action="/booking/<%= booking._id %>/confirm" method="POST">
+                    <button class="btn btn-sm btn-success w-100">Confirm</button>
+                  </form>
+                  <form action="/booking/<%= booking._id %>/reject" method="POST">
+                    <button class="btn btn-sm btn-outline-danger w-100">Reject</button>
+                  </form>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+</div>
+
+<script>
+  document.getElementById("tab-listings").addEventListener("click", function () {
+    document.getElementById("listings-section").style.display = "block";
+    document.getElementById("bookings-section").style.display = "none";
+    this.classList.add("active");
+    document.getElementById("tab-bookings").classList.remove("active");
+  });
+
+  document.getElementById("tab-bookings").addEventListener("click", function () {
+    document.getElementById("listings-section").style.display = "none";
+    document.getElementById("bookings-section").style.display = "block";
+    this.classList.add("active");
+    document.getElementById("tab-listings").classList.remove("active");
+  });
+</script>

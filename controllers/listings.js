@@ -1,4 +1,5 @@
 const Listing = require("../models/listing");
+const Booking = require("../models/booking");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
 
@@ -92,7 +93,7 @@ module.exports.create = async (req, res, next) => {
   let savedListing = await newlisting.save();
   console.log(savedListing);
   req.flash("success", "New Listing Created!");
-  res.redirect("/listings");
+  res.redirect("/host/dashboard");
 };
 
 //EDIT
@@ -169,8 +170,16 @@ module.exports.show = async (req, res) => {
     req.flash("error", "No such listing exists!");
     res.redirect("/listings");
   }
+  let booking = null;
+  if (req.user) {
+    booking = await Booking.findOne({
+      listing: id,
+      user: req.user._id
+    });
+  }
   res.render("listings/show.ejs", {
     listing,
+    booking,
     searchQuery: "",
     category: [
       "Trendings",

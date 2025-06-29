@@ -1,4 +1,5 @@
 <% layout("/layouts/boilerplate") %>
+
 <style>
   .add-btn {
     color: white;
@@ -6,6 +7,7 @@
   .add-btn:hover {
     color: white !important;
   }
+
   .filter {
     text-align: center;
     margin: 0.5rem;
@@ -22,13 +24,16 @@
     flex-direction: column;
     align-items: center;
     opacity: 0.8;
+    text-decoration: none;
   }
   .filter a:hover {
     opacity: 1;
   }
+
   .tax-info {
     display: none;
   }
+
   .tax-toggle {
     border: 1px solid black;
     border-radius: 1rem;
@@ -39,27 +44,62 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background-color: #fff;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   }
+
+  .listing-card {
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    background-color: #fff;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid #eee;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .listing-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+  }
+
   .card-img-top {
-    height: 20rem;
+    height: 220px;
+    object-fit: cover;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
   }
+
+  .view-details-btn {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .listing-card:hover .view-details-btn {
+    opacity: 1;
+    visibility: visible;
+  }
+
   @media screen and (max-width: 1200px) {
     .tax-info {
       display: none;
     }
     .tax-toggle {
       margin-left: 4px;
-      margin-top: 1rem; /* Ensure it aligns properly in smaller screens */
+      margin-top: 1rem;
     }
     .filter a {
       font-size: 0.7rem;
       opacity: 0.7;
     }
     .filter a:hover {
-      /* font-size: 0.8rem; */
       opacity: 1;
     }
   }
+
   @media (max-width: 992px) {
     .tax-info {
       display: none;
@@ -73,18 +113,19 @@
       opacity: 0.7;
     }
     .filter a:hover {
-      /* font-size: 0.8rem; */
       opacity: 1;
     }
   }
+
   @media (min-width: 576px) and (max-width: 768px) {
     .row-cols-md-3 > * {
       width: 50% !important;
     }
   }
+
   @media (max-width: 768px) {
     #filters {
-      justify-content: center; /* Center filters on smaller screens */
+      justify-content: center;
     }
     .filter {
       margin: 0.2rem;
@@ -93,6 +134,7 @@
       font-size: 0.8rem;
     }
   }
+
   @media (max-width: 576px) {
     .filter {
       margin: 0.2rem;
@@ -101,115 +143,82 @@
       font-size: 0.8rem;
     }
     .card-img-top {
-      height: 15rem; /* Adjust image height for smaller screens */
+      height: 15rem;
     }
   }
 </style>
+
 <body>
   <div class="container filters">
-    <button
-      class="btn add-btn d-lg-none"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#filterCollapse"
-      aria-expanded="false"
-      aria-controls="filterCollapse"
-    >
+    <button class="btn add-btn d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
       Filters
     </button>
 
     <div class="collapse d-lg-flex flex-wrap" id="filterCollapse">
-      <div class="filter">
-        <a href="/listings?category=Trendings" class="btn btn-category">
-          <div><i class="fa-solid fa-fire"></i></div>
-          <p>Trendings</p>
-        </a>
-      </div>
-      <div class="filter">
-        <a href="/listings?category=Rooms" class="btn btn-category">
-          <div><i class="fa-solid fa-bed"></i></div>
-          <p>Rooms</p>
-        </a>
-      </div>
-      <div class="filter">
-        <a href="/listings?category=Iconic Cities" class="btn btn-category">
-          <div><i class="fa-solid fa-mountain-city"></i></div>
-          <p>Iconic Cities</p>
-        </a>
-      </div>
-      <div class="filter">
-        <a href="/listings?category=Mountains" class="btn btn-category">
-          <div><i class="fa-solid fa-mountain"></i></div>
-          <p>Mountains</p>
-        </a>
-      </div>
-      <div class="filter">
-        <a href="/listings?category=Castles" class="btn btn-category">
-          <div><i class="fa-brands fa-fort-awesome"></i></div>
-          <p>Castles</p>
-        </a>
-      </div>
-      <div class="filter">
-        <a href="/listings?category=Amazing Pools" class="btn btn-category">
-          <div><i class="fa-solid fa-person-swimming"></i></div>
-          <p>Amazing Pools</p>
-        </a>
-      </div>
-      <div class="filter">
-        <a href="/listings?category=Camping" class="btn btn-category">
-          <div><i class="fa-solid fa-campground"></i></div>
-          <p>Camping</p>
-        </a>
-      </div>
-      <div class="filter">
-        <a href="/listings?category=Farms" class="btn btn-category">
-          <div><i class="fa-solid fa-tractor"></i></div>
-          <p>Farms</p>
-        </a>
-      </div>
-      <div class="filter">
-        <a href="/listings?category=Arctic" class="btn btn-category">
-          <div><i class="fa-regular fa-snowflake"></i></div>
-          <p>Arctic</p>
-        </a>
-      </div>
+      <% const categories = [
+        { name: 'Trendings', icon: 'fa-fire' },
+        { name: 'Rooms', icon: 'fa-bed' },
+        { name: 'Iconic Cities', icon: 'fa-mountain-city' },
+        { name: 'Mountains', icon: 'fa-mountain' },
+        { name: 'Castles', icon: 'fa-fort-awesome', brand: true },
+        { name: 'Amazing Pools', icon: 'fa-person-swimming' },
+        { name: 'Camping', icon: 'fa-campground' },
+        { name: 'Farms', icon: 'fa-tractor' },
+        { name: 'Arctic', icon: 'fa-snowflake', regular: true }
+      ]; %>
+
+      <% categories.forEach(cat => { %>
+        <div class="filter">
+          <a href="/listings?category=<%= cat.name %>" class="btn btn-category">
+            <div><i class="<%= cat.brand ? 'fa-brands' : cat.regular ? 'fa-regular' : 'fa-solid' %> <%= cat.icon %>"></i></div>
+            <p><%= cat.name %></p>
+          </a>
+        </div>
+      <% }) %>
     </div>
   </div>
-  <div class="tax-toggle">
-    <div class="form-check-reverse form-switch">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        role="switch"
-        id="flexSwitchCheckDefault"
-      />
-      <label class="form-check-label" for="flexSwitchCheckDefault"
-        >Display total after taxes</label
-      >
-    </div>
-  </div>
+  
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 mt-3">
     <% if (listings.length === 0) { %>
-    <h2 class="col-12 text-center">No listings found.</h2>
-    <% } else { %> <% listings.forEach(listing => { %>
-    <div class="col">
-      <a href="/listings/<%= listing._id %>" class="listing-link">
-        <div class="card listing-card">
-          <img
-            src="<%= listing.image.url %>"
-            class="card-img-top"
-            alt="listing_image"
-          />
-          <div class="card-body">
-            <p class="card-text">
-              <b><%= listing.title %></b><br />
-               &#8377 <%= listing.price.toLocaleString("en-IN") %> / Night
-              <i class="tax-info">&nbsp; &nbsp; +18% GST</i><br />
-            </p>
-          </div>
+      <h2 class="col-12 text-center">No listings found.</h2>
+    <% } else { %>
+      <% listings.forEach(listing => { %>
+        <div class="col">
+          <a href="/listings/<%= listing._id %>" class="listing-link text-decoration-none">
+            <div class="card listing-card h-100">
+              <div class="position-relative">
+                <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" />
+                <span class="badge bg-warning text-dark position-absolute top-2 start-2 m-2 rounded-pill px-3 py-1 shadow-sm fw-semibold">
+                  <i class="fa-solid fa-award me-1"></i> Superhost
+                </span>
+                <i class="fa-regular fa-heart position-absolute top-2 end-2 m-3 fs-5 text-white" style="text-shadow: 0 0 3px rgba(0,0,0,0.5); cursor: pointer;"></i>
+              </div>
+              <div class="card-body px-3 pt-3 pb-2">
+                <div class="d-flex justify-content-between text-muted small mb-1">
+                  <div><i class="fa-solid fa-location-dot me-1"></i> <%= listing.location %></div>
+                  <div><i class="fa-solid fa-star text-warning me-1"></i> 4.8 <span class="text-muted">(89)</span></div>
+                </div>
+                <h6 class="fw-bold text-dark"><%= listing.title %></h6>
+                <div class="text-muted small mb-2">
+                  <i class="fa-solid fa-user-group me-1"></i> Up to <%= listing.guests || 4 %> guests
+                </div>
+                <div class="mb-3 d-flex flex-wrap gap-2">
+                  <span class="badge bg-light border text-muted">WiFi</span>
+                  <span class="badge bg-light border text-muted">Fireplace</span>
+                  <span class="badge bg-light border text-muted">Hot Tub</span>
+                  <span class="badge bg-light border text-muted">+5 more</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="fw-bold fs-6 text-dark">&#8377;<%= listing.price.toLocaleString("en-IN") %> <span class="text-muted fs-6">/ night</span></div>
+                  <a href="/listings/<%= listing._id %>" class="btn btn-sm btn-primary rounded-pill px-3 view-details-btn" style="background-color: #e91e63; border: none;">
+                    View Details
+                  </a>
+                </div>
+              </div>
+            </div>
+          </a>
         </div>
-      </a>
-    </div>
-    <% }) %> <% } %>
+      <% }) %>
+    <% } %>
   </div>
 </body>

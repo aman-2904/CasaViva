@@ -1,0 +1,99 @@
+<% layout('/layouts/boilerplate') %>
+
+<style>
+  .signup-container {
+    max-width: 450px;
+    margin: 80px auto;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(255, 105, 135, 0.25); /* Pink glow */
+    background-color: #fff;
+  }
+
+  .signup-container h2 {
+    text-align: center;
+    color: #dc3545;
+    font-weight: 700;
+    margin-bottom: 2rem;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .form-control {
+    border-radius: 999px;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+  }
+
+  .form-control::placeholder {
+    color: #999;
+  }
+
+  .signup-btn {
+    width: 100%;
+    background-color: #dc3545;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem;
+    border-radius: 999px;
+    transition: background-color 0.3s ease;
+  }
+
+  .signup-btn:hover {
+    background-color: #c82333;
+  }
+
+  .login-link {
+    text-align: center;
+    margin-top: 1rem;
+    color: #555;
+  }
+
+  .login-link a {
+    color: #dc3545;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+
+  .pink-shadow-card {
+    box-shadow: 0 10px 60px rgba(255, 105, 135, 0.35); /* Pinker shadow */
+    border-radius: 1rem;
+  }
+</style>
+
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+  <div class="card pink-shadow-card p-4" style="max-width: 500px; width: 100%;">
+    <h2 class="text-center mb-4 text-danger fw-bold">Host Sign Up</h2>
+    <form action="/signup/host" method="POST" novalidate>
+      <div class="mb-3">
+        <label for="username" class="form-label fw-semibold">Username</label>
+        <input type="text" class="form-control rounded-pill" id="username" name="username" placeholder="Enter your username" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label fw-semibold">Email</label>
+        <input type="email" class="form-control rounded-pill" id="email" name="email" placeholder="Enter your email" required>
+      </div>
+
+      <div class="mb-4">
+        <label for="password" class="form-label fw-semibold">Password</label>
+        <input type="password" class="form-control rounded-pill" id="password" name="password" placeholder="Create a password" required>
+      </div>
+
+      <div class="d-grid">
+        <button type="submit" class="btn btn-danger rounded-pill fw-semibold">Sign Up as Host</button>
+      </div>
+
+      <div class="text-center mt-3">
+        <small>Already have an account? <a href="/login" class="text-decoration-none fw-bold text-danger">Login</a></small>
+      </div>
+    </form>
+  </div>
+</div>
