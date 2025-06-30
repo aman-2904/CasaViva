@@ -3,8 +3,8 @@
   const mapToken = "<%= process.env.MAP_TOKEN %>";
   const listing = <%- JSON.stringify(listing) %>;
 </script>
+
 <style>
-  /* General Card Styles */
   .card {
     border: 1px solid #dee2e6;
     border-radius: 12px;
@@ -16,12 +16,10 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   }
 
-  /* Shared Body Padding for Cards */
   .card-body {
     padding: 1.5rem !important;
   }
 
-  /* Review-Specific Card (Optional if you're targeting reviews only) */
   .review-card {
     border: 1px solid #dee2e6;
     border-radius: 12px;
@@ -32,75 +30,68 @@
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   }
-  /* Optional for better icon alignment */
-.text-muted .bi {
-  width: 1.2em;
-  text-align: center;
-}
-.change{
-  background-color: #dc3545;
-  border : #dc3545;
-}
-.change:hover{
-  background-color: #dc3545;
-  opacity: 0.9;
-}
 
+  .text-muted .bi {
+    width: 1.2em;
+    text-align: center;
+  }
+
+  .change {
+    background-color: #dc3545;
+    border: #dc3545;
+  }
+
+  .change:hover {
+    background-color: #dc3545;
+    opacity: 0.9;
+  }
+
+  @media (max-width: 768px) {
+    .position-sticky {
+      position: static !important;
+    }
+    #map {
+      height: 250px;
+    }
+  }
 </style>
 
 <body>
-  <div class="container-fluid px-4 py-3">
-    <!-- HERO IMAGE + INFO -->
-    <div class="row">
-      <div class="col-lg-8">
-        <div class="mb-3">
-          <img src="<%= listing.image.url %>" class="img-fluid rounded shadow-sm" style="width: 100%; height: 420px; object-fit: cover;" alt="listing image" />
-        </div>
-        <h2><b><%= listing.title %></b></h2>
+  <div class="container py-4 px-3">
+    <!-- HERO + INFO -->
+    <div class="row gy-4">
+      <div class="col-lg-8 col-12">
+        <img src="<%= listing.image.url %>" class="img-fluid rounded shadow-sm mb-3 w-100" style="height: auto; max-height: 420px; object-fit: cover;" alt="listing image" />
+        <h2 class="fw-bold"><%= listing.title %></h2>
         <p><i class="bi bi-geo-alt"></i> <%= listing.location %>, <%= listing.country %></p>
         <p><i class="bi bi-star-fill text-warning"></i> 4.8 (<%= listing.reviews.length %> reviews)</p>
         <p class="lead"><%= listing.description %></p>
         <p><strong>Category:</strong> <%= listing.category %></p>
         <p><strong>Hosted by:</strong> <%= listing.owner.username %></p>
 
+        <!-- AMENITIES -->
         <h4 class="mt-4">What this place offers</h4>
-<div class="row text-muted g-3">
-  <div class="col-md-3 col-6 d-flex align-items-center gap-2">
-    <i class="bi bi-wifi fs-5 text-primary"></i> WiFi
-  </div>
-  <div class="col-md-3 col-6 d-flex align-items-center gap-2">
-    <i class="bi bi-droplet-half fs-5 text-info"></i> Hot Tub
-  </div>
-  <div class="col-md-3 col-6 d-flex align-items-center gap-2">
-    <i class="bi bi-fire fs-5 text-danger"></i> Fireplace
-  </div>
-  <div class="col-md-3 col-6 d-flex align-items-center gap-2">
-    <i class="bi bi-house-heart fs-5 text-secondary"></i> Kitchen
-  </div>
-  <div class="col-md-3 col-6 d-flex align-items-center gap-2">
-    <i class="bi bi-box-arrow-up-right fs-5 text-warning"></i> Deck
-  </div>
-  <div class="col-md-3 col-6 d-flex align-items-center gap-2">
-    <i class="bi bi-image fs-5 text-success"></i> Mountain View
-  </div>
-  <div class="col-md-3 col-6 d-flex align-items-center gap-2">
-    <i class="bi bi-car-front-fill fs-5 text-dark"></i> Parking
-  </div>
-  <div class="col-md-3 col-6 d-flex align-items-center gap-2">
-    <i class="bi bi-snow fs-5 text-primary"></i> Ski Storage
-  </div>
-</div>
+        <div class="row text-muted g-3">
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-wifi fs-5 text-primary"></i> WiFi</div>
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-droplet-half fs-5 text-info"></i> Hot Tub</div>
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-fire fs-5 text-danger"></i> Fireplace</div>
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-house-heart fs-5 text-secondary"></i> Kitchen</div>
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-box-arrow-up-right fs-5 text-warning"></i> Deck</div>
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-image fs-5 text-success"></i> Mountain View</div>
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-car-front-fill fs-5 text-dark"></i> Parking</div>
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-snow fs-5 text-primary"></i> Ski Storage</div>
+        </div>
 
-
+        <!-- MAP -->
         <div class="mt-5">
           <h3><b>Where you'll be</b></h3>
-          <div id="map" style="width: 100%; height: 300px;" class="rounded shadow-sm"></div>
+          <div id="map" class="rounded shadow-sm w-100" style="height: 300px;"></div>
         </div>
       </div>
 
-      <!-- RESERVATION + HOST CONTROLS -->
-      <div class="col-lg-4">
-        <div class="position-sticky" style="top: 100px; margin-left: 20px;">
+      <!-- SIDEBAR: Reservation + Host -->
+      <div class="col-lg-4 col-12">
+        <div class="position-sticky" style="top: 100px;">
           <% if (currUser && !listing.owner._id.equals(currUser._id)) { %>
             <% if (booking) {
               const checkInDate = new Date(booking.checkIn);
@@ -111,82 +102,50 @@
               const platformFee = subtotal * 0.10;
               const total = subtotal + tax + platformFee;
             %>
-            <div class="card p-4 shadow-sm mb-3 border-0" style="background-color: #f9f9f9; border-radius: 16px;">
-  <h4 class="mb-3"><i class="bi bi-receipt-cutoff text-primary"></i> <b>Your Reservation</b></h4>
-
-  <div class="d-flex justify-content-between align-items-center mb-2">
-    <span><i class="bi bi-calendar-event"></i> <strong>Check-In:</strong></span>
-    <span class="text-muted"><%= checkInDate.toDateString() %></span>
-  </div>
-
-  <div class="d-flex justify-content-between align-items-center mb-2">
-    <span><i class="bi bi-calendar-event-fill"></i> <strong>Check-Out:</strong></span>
-    <span class="text-muted"><%= checkOutDate.toDateString() %></span>
-  </div>
-
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <span><i class="bi bi-people-fill"></i> <strong>Guests:</strong></span>
-    <span class="text-muted"><%= booking.guests %></span>
-  </div>
-
-  <hr class="my-3">
-
-  <div class="d-flex justify-content-between mb-2">
-    <span>₹<%= listing.price.toLocaleString() %> x <%= nights %> nights</span>
-    <span>₹<%= subtotal.toFixed(2) %></span>
-  </div>
-
-  <div class="d-flex justify-content-between mb-2">
-    <span>Tax (18%)</span>
-    <span>₹<%= tax.toFixed(2) %></span>
-  </div>
-
-  <div class="d-flex justify-content-between mb-3">
-    <span>Platform Fee (10%)</span>
-    <span>₹<%= platformFee.toFixed(2) %></span>
-  </div>
-
-  <div class="d-flex justify-content-between border-top pt-3 fw-bold fs-5">
-    <span>Total</span>
-    <span>₹<%= total.toFixed(2) %></span>
-  </div>
-
-  <p class="mt-3 text-muted small text-center">
-    <i class="bi bi-info-circle"></i> Status: 
-    <span class="<%= booking.status === 'confirmed' ? 'text-success' : booking.status === 'rejected' ? 'text-danger' : 'text-warning' %>">
-      <%= booking.status.charAt(0).toUpperCase() + booking.status.slice(1) %>
-    </span>
-  </p>
-</div>
-
+            <!-- Reservation Detail Card -->
+            <div class="card p-4 shadow-sm mb-3 border-0 bg-light rounded-4">
+              <h4 class="mb-3"><i class="bi bi-receipt-cutoff text-primary"></i> <b>Your Reservation</b></h4>
+              <div class="d-flex justify-content-between mb-2"><span><i class="bi bi-calendar-event"></i> <strong>Check-In:</strong></span><span class="text-muted"><%= checkInDate.toDateString() %></span></div>
+              <div class="d-flex justify-content-between mb-2"><span><i class="bi bi-calendar-event-fill"></i> <strong>Check-Out:</strong></span><span class="text-muted"><%= checkOutDate.toDateString() %></span></div>
+              <div class="d-flex justify-content-between mb-3"><span><i class="bi bi-people-fill"></i> <strong>Guests:</strong></span><span class="text-muted"><%= booking.guests %></span></div>
+              <hr class="my-3">
+              <div class="d-flex justify-content-between mb-2"><span>₹<%= listing.price.toLocaleString() %> x <%= nights %> nights</span><span>₹<%= subtotal.toFixed(2) %></span></div>
+              <div class="d-flex justify-content-between mb-2"><span>Tax (18%)</span><span>₹<%= tax.toFixed(2) %></span></div>
+              <div class="d-flex justify-content-between mb-3"><span>Platform Fee (10%)</span><span>₹<%= platformFee.toFixed(2) %></span></div>
+              <div class="d-flex justify-content-between border-top pt-3 fw-bold fs-5"><span>Total</span><span>₹<%= total.toFixed(2) %></span></div>
+              <p class="mt-3 text-muted small text-center">
+                <i class="bi bi-info-circle"></i> Status:
+                <span class="<%= booking.status === 'confirmed' ? 'text-success' : booking.status === 'rejected' ? 'text-danger' : 'text-warning' %>">
+                  <%= booking.status.charAt(0).toUpperCase() + booking.status.slice(1) %>
+                </span>
+              </p>
+            </div>
             <% } else { %>
+              <!-- Reservation Form -->
               <form action="/booking/<%= listing._id %>" method="POST" id="reservationForm">
                 <div class="card p-4 shadow-sm mb-3">
                   <h4><b>&#8377;<%= listing.price.toLocaleString("en-IN") %></b> <small class="text-muted">night</small></h4>
                   <p><i class="bi bi-star-fill text-warning"></i> 4.8</p>
-          
                   <div class="mb-2">
                     <label class="form-label">Check-In</label>
                     <input type="date" name="checkIn" id="checkIn" class="form-control" required>
                   </div>
-          
                   <div class="mb-2">
                     <label class="form-label">Check-Out</label>
                     <input type="date" name="checkOut" id="checkOut" class="form-control" required>
                   </div>
-          
                   <div class="mb-3">
                     <label class="form-label">Guests: <span id="guestCount">1</span></label>
                     <input type="range" name="guests" id="guestsSlider" min="1" max="10" value="1" class="form-range">
                   </div>
-          
-                  <button class="btn change btn-primary w-100 background-color:#dc3545" type="submit">Reserve Now</button>
-                  <p class="text-muted mt-2 text-center" style="font-size: 0.9rem;">You won't be charged yet</p>
+                  <button class="btn change btn-primary w-100" type="submit">Reserve Now</button>
+                  <p class="text-muted mt-2 text-center small">You won't be charged yet</p>
                 </div>
               </form>
             <% } %>
           <% } %>
 
+          <!-- Host Controls -->
           <% if (currUser && listing.owner._id.equals(currUser._id)) { %>
             <div class="card p-4 shadow-sm mb-3">
               <h5 class="text-center">Host Controls</h5>
@@ -210,16 +169,11 @@
               <label for="rating"><b>Rating</b></label>
               <fieldset class="starability-slot">
                 <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating.">
-                <input type="radio" id="first-rate1" name="review[rating]" value="1">
-                <label for="first-rate1" title="Terrible">1 star</label>
-                <input type="radio" id="first-rate2" name="review[rating]" value="2">
-                <label for="first-rate2" title="Not good">2 stars</label>
-                <input type="radio" id="first-rate3" name="review[rating]" value="3">
-                <label for="first-rate3" title="Average">3 stars</label>
-                <input type="radio" id="first-rate4" name="review[rating]" value="4">
-                <label for="first-rate4" title="Very good">4 stars</label>
-                <input type="radio" id="first-rate5" name="review[rating]" value="5">
-                <label for="first-rate5" title="Amazing">5 stars</label>
+                <input type="radio" id="first-rate1" name="review[rating]" value="1"><label for="first-rate1">1 star</label>
+                <input type="radio" id="first-rate2" name="review[rating]" value="2"><label for="first-rate2">2 stars</label>
+                <input type="radio" id="first-rate3" name="review[rating]" value="3"><label for="first-rate3">3 stars</label>
+                <input type="radio" id="first-rate4" name="review[rating]" value="4"><label for="first-rate4">4 stars</label>
+                <input type="radio" id="first-rate5" name="review[rating]" value="5"><label for="first-rate5">5 stars</label>
               </fieldset>
             </div>
             <div class="mb-3">
@@ -256,6 +210,7 @@
       </div>
     <% } %>
   </div>
+
   <script src="/js/map.js"></script>
 </body>
 
@@ -265,11 +220,9 @@
   const guestsSlider = document.getElementById('guestsSlider');
   const guestCountDisplay = document.getElementById('guestCount');
 
-  // Set today's date as minimum for check-in
   const today = new Date().toISOString().split('T')[0];
   checkIn.setAttribute('min', today);
 
-  // Update check-out min date based on check-in
   checkIn.addEventListener('change', function () {
     const minCheckoutDate = new Date(this.value);
     minCheckoutDate.setDate(minCheckoutDate.getDate() + 1);
@@ -277,9 +230,7 @@
     checkOut.setAttribute('min', formattedCheckoutMin);
   });
 
-  // Live update guest count display
   guestsSlider.addEventListener('input', function () {
     guestCountDisplay.textContent = this.value;
   });
 </script>
-

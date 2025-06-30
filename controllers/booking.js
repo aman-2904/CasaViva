@@ -40,5 +40,3 @@ module.exports.create = async (req, res) => {
     req.flash("error", "Booking rejected.");
     res.redirect("/host/dashboard");
   };
-  
-  
