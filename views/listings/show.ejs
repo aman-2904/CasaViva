@@ -61,10 +61,21 @@
     <!-- HERO + INFO -->
     <div class="row gy-4">
       <div class="col-lg-8 col-12">
-        <img src="<%= listing.image.url %>" class="img-fluid rounded shadow-sm mb-3 w-100" style="height: auto; max-height: 420px; object-fit: cover;" alt="listing image" />
+        <img
+          src="<%= listing.image.url %>"
+          class="img-fluid rounded shadow-sm mb-3 w-100"
+          style="height: auto; max-height: 420px; object-fit: cover"
+          alt="listing image"
+        />
         <h2 class="fw-bold"><%= listing.title %></h2>
-        <p><i class="bi bi-geo-alt"></i> <%= listing.location %>, <%= listing.country %></p>
-        <p><i class="bi bi-star-fill text-warning"></i> 4.8 (<%= listing.reviews.length %> reviews)</p>
+        <p>
+          <i class="bi bi-geo-alt"></i> <%= listing.location %>, <%=
+          listing.country %>
+        </p>
+        <p>
+          <i class="bi bi-star-fill text-warning"></i> 4.8 (<%=
+          listing.reviews.length %> reviews)
+        </p>
         <p class="lead"><%= listing.description %></p>
         <p><strong>Category:</strong> <%= listing.category %></p>
         <p><strong>Hosted by:</strong> <%= listing.owner.username %></p>
@@ -72,88 +83,184 @@
         <!-- AMENITIES -->
         <h4 class="mt-4">What this place offers</h4>
         <div class="row text-muted g-3">
-          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-wifi fs-5 text-primary"></i> WiFi</div>
-          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-droplet-half fs-5 text-info"></i> Hot Tub</div>
-          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-fire fs-5 text-danger"></i> Fireplace</div>
-          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-house-heart fs-5 text-secondary"></i> Kitchen</div>
-          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-box-arrow-up-right fs-5 text-warning"></i> Deck</div>
-          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-image fs-5 text-success"></i> Mountain View</div>
-          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-car-front-fill fs-5 text-dark"></i> Parking</div>
-          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2"><i class="bi bi-snow fs-5 text-primary"></i> Ski Storage</div>
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2">
+            <i class="bi bi-wifi fs-5 text-primary"></i> WiFi
+          </div>
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2">
+            <i class="bi bi-droplet-half fs-5 text-info"></i> Hot Tub
+          </div>
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2">
+            <i class="bi bi-fire fs-5 text-danger"></i> Fireplace
+          </div>
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2">
+            <i class="bi bi-house-heart fs-5 text-secondary"></i> Kitchen
+          </div>
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2">
+            <i class="bi bi-box-arrow-up-right fs-5 text-warning"></i> Deck
+          </div>
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2">
+            <i class="bi bi-image fs-5 text-success"></i> Mountain View
+          </div>
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2">
+            <i class="bi bi-car-front-fill fs-5 text-dark"></i> Parking
+          </div>
+          <div class="col-sm-6 col-md-4 d-flex align-items-center gap-2">
+            <i class="bi bi-snow fs-5 text-primary"></i> Ski Storage
+          </div>
         </div>
 
         <!-- MAP -->
         <div class="mt-5">
           <h3><b>Where you'll be</b></h3>
-          <div id="map" class="rounded shadow-sm w-100" style="height: 300px;"></div>
+          <div
+            id="map"
+            class="rounded shadow-sm w-100"
+            style="height: 300px"
+          ></div>
         </div>
       </div>
 
       <!-- SIDEBAR: Reservation + Host -->
       <div class="col-lg-4 col-12">
-        <div class="position-sticky" style="top: 100px;">
-          <% if (currUser && !listing.owner._id.equals(currUser._id)) { %>
-            <% if (booking) {
-              const checkInDate = new Date(booking.checkIn);
-              const checkOutDate = new Date(booking.checkOut);
-              const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
-              const subtotal = listing.price * nights;
-              const tax = subtotal * 0.18;
-              const platformFee = subtotal * 0.10;
-              const total = subtotal + tax + platformFee;
-            %>
-            <!-- Reservation Detail Card -->
-            <div class="card p-4 shadow-sm mb-3 border-0 bg-light rounded-4">
-              <h4 class="mb-3"><i class="bi bi-receipt-cutoff text-primary"></i> <b>Your Reservation</b></h4>
-              <div class="d-flex justify-content-between mb-2"><span><i class="bi bi-calendar-event"></i> <strong>Check-In:</strong></span><span class="text-muted"><%= checkInDate.toDateString() %></span></div>
-              <div class="d-flex justify-content-between mb-2"><span><i class="bi bi-calendar-event-fill"></i> <strong>Check-Out:</strong></span><span class="text-muted"><%= checkOutDate.toDateString() %></span></div>
-              <div class="d-flex justify-content-between mb-3"><span><i class="bi bi-people-fill"></i> <strong>Guests:</strong></span><span class="text-muted"><%= booking.guests %></span></div>
-              <hr class="my-3">
-              <div class="d-flex justify-content-between mb-2"><span>₹<%= listing.price.toLocaleString() %> x <%= nights %> nights</span><span>₹<%= subtotal.toFixed(2) %></span></div>
-              <div class="d-flex justify-content-between mb-2"><span>Tax (18%)</span><span>₹<%= tax.toFixed(2) %></span></div>
-              <div class="d-flex justify-content-between mb-3"><span>Platform Fee (10%)</span><span>₹<%= platformFee.toFixed(2) %></span></div>
-              <div class="d-flex justify-content-between border-top pt-3 fw-bold fs-5"><span>Total</span><span>₹<%= total.toFixed(2) %></span></div>
-              <p class="mt-3 text-muted small text-center">
-                <i class="bi bi-info-circle"></i> Status:
-                <span class="<%= booking.status === 'confirmed' ? 'text-success' : booking.status === 'rejected' ? 'text-danger' : 'text-warning' %>">
-                  <%= booking.status.charAt(0).toUpperCase() + booking.status.slice(1) %>
-                </span>
+        <div class="position-sticky" style="top: 100px">
+          <% if (currUser && !listing.owner._id.equals(currUser._id)) { %> <% if
+          (booking && (booking.status === 'confirmed' || booking.status ===
+          'pending')) { const checkInDate = new Date(booking.checkIn); const
+          checkOutDate = new Date(booking.checkOut); const nights =
+          Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)); const
+          subtotal = listing.price * nights; const tax = subtotal * 0.18; const
+          platformFee = subtotal * 0.10; const total = subtotal + tax +
+          platformFee; %>
+          <!-- Reservation Detail Card -->
+          <div class="card p-4 shadow-sm mb-3 border-0 bg-light rounded-4">
+            <h4 class="mb-3">
+              <i class="bi bi-receipt-cutoff text-primary"></i>
+              <b>Your Reservation</b>
+            </h4>
+            <div class="d-flex justify-content-between mb-2">
+              <span
+                ><i class="bi bi-calendar-event"></i>
+                <strong>Check-In:</strong></span
+              ><span class="text-muted"><%= checkInDate.toDateString() %></span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span
+                ><i class="bi bi-calendar-event-fill"></i>
+                <strong>Check-Out:</strong></span
+              ><span class="text-muted"
+                ><%= checkOutDate.toDateString() %></span
+              >
+            </div>
+            <div class="d-flex justify-content-between mb-3">
+              <span
+                ><i class="bi bi-people-fill"></i>
+                <strong>Guests:</strong></span
+              ><span class="text-muted"><%= booking.guests %></span>
+            </div>
+            <hr class="my-3" />
+            <div class="d-flex justify-content-between mb-2">
+              <span
+                >₹<%= listing.price.toLocaleString() %> x <%= nights %>
+                nights</span
+              ><span>₹<%= subtotal.toFixed(2) %></span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Tax (18%)</span><span>₹<%= tax.toFixed(2) %></span>
+            </div>
+            <div class="d-flex justify-content-between mb-3">
+              <span>Platform Fee (10%)</span
+              ><span>₹<%= platformFee.toFixed(2) %></span>
+            </div>
+            <div
+              class="d-flex justify-content-between border-top pt-3 fw-bold fs-5"
+            >
+              <span>Total</span><span>₹<%= total.toFixed(2) %></span>
+            </div>
+            <p class="mt-3 text-muted small text-center">
+              <i class="bi bi-info-circle"></i> Status:
+              <span
+                class="<%= booking.status === 'confirmed' ? 'text-success' : 'text-warning' %>"
+              >
+                <%= booking.status.charAt(0).toUpperCase() +
+                booking.status.slice(1) %>
+              </span>
+            </p>
+          </div>
+          <% } else { %>
+          <!-- Reservation Form -->
+          <form
+            action="/booking/<%= listing._id %>"
+            method="POST"
+            id="reservationForm"
+          >
+            <div class="card p-4 shadow-sm mb-3">
+              <h4>
+                <b>&#8377;<%= listing.price.toLocaleString("en-IN") %></b>
+                <small class="text-muted">night</small>
+              </h4>
+              <p><i class="bi bi-star-fill text-warning"></i> 4.8</p>
+              <div class="mb-2">
+                <label class="form-label">Check-In</label>
+                <input
+                  type="date"
+                  name="checkIn"
+                  id="checkIn"
+                  class="form-control"
+                  required
+                />
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Check-Out</label>
+                <input
+                  type="date"
+                  name="checkOut"
+                  id="checkOut"
+                  class="form-control"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label"
+                  >Guests: <span id="guestCount">1</span></label
+                >
+                <input
+                  type="range"
+                  name="guests"
+                  id="guestsSlider"
+                  min="1"
+                  max="10"
+                  value="1"
+                  class="form-range"
+                />
+              </div>
+              <button class="btn change btn-primary w-100" type="submit">
+                Reserve Now
+              </button>
+              <p class="text-muted mt-2 text-center small">
+                You won't be charged yet
               </p>
             </div>
-            <% } else { %>
-              <!-- Reservation Form -->
-              <form action="/booking/<%= listing._id %>" method="POST" id="reservationForm">
-                <div class="card p-4 shadow-sm mb-3">
-                  <h4><b>&#8377;<%= listing.price.toLocaleString("en-IN") %></b> <small class="text-muted">night</small></h4>
-                  <p><i class="bi bi-star-fill text-warning"></i> 4.8</p>
-                  <div class="mb-2">
-                    <label class="form-label">Check-In</label>
-                    <input type="date" name="checkIn" id="checkIn" class="form-control" required>
-                  </div>
-                  <div class="mb-2">
-                    <label class="form-label">Check-Out</label>
-                    <input type="date" name="checkOut" id="checkOut" class="form-control" required>
-                  </div>
-                  <div class="mb-3">
-                    <label class="form-label">Guests: <span id="guestCount">1</span></label>
-                    <input type="range" name="guests" id="guestsSlider" min="1" max="10" value="1" class="form-range">
-                  </div>
-                  <button class="btn change btn-primary w-100" type="submit">Reserve Now</button>
-                  <p class="text-muted mt-2 text-center small">You won't be charged yet</p>
-                </div>
-              </form>
-            <% } %>
-          <% } %>
+          </form>
+          <% } %> <% } %>
 
           <!-- Host Controls -->
           <% if (currUser && listing.owner._id.equals(currUser._id)) { %>
-            <div class="card p-4 shadow-sm mb-3">
-              <h5 class="text-center">Host Controls</h5>
-              <a href="/listings/<%= listing._id %>/edit" class="btn btn-outline-dark w-100 mb-2">Edit Listing</a>
-              <form action="/listings/<%= listing._id %>?_method=delete" method="POST">
-                <button class="btn btn-outline-danger w-100">Delete Listing</button>
-              </form>
-            </div>
+          <div class="card p-4 shadow-sm mb-3">
+            <h5 class="text-center">Host Controls</h5>
+            <a
+              href="/listings/<%= listing._id %>/edit"
+              class="btn btn-outline-dark w-100 mb-2"
+              >Edit Listing
+            </a>
+            <form
+              action="/listings/<%= listing._id %>?_method=delete"
+              method="POST"
+            >
+              <button class="btn btn-outline-danger w-100">
+                Delete Listing
+              </button>
+            </form>
+          </div>
           <% } %>
         </div>
       </div>
@@ -161,53 +268,103 @@
 
     <!-- REVIEW SUBMIT -->
     <% if (currUser) { %>
-      <div class="row my-5">
-        <div class="col-lg-8">
-          <h3><b>Leave a review</b></h3>
-          <form action="/listings/<%= listing._id %>/reviews" method="POST" class="needs-validation" novalidate>
-            <div class="mb-3">
-              <label for="rating"><b>Rating</b></label>
-              <fieldset class="starability-slot">
-                <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating.">
-                <input type="radio" id="first-rate1" name="review[rating]" value="1"><label for="first-rate1">1 star</label>
-                <input type="radio" id="first-rate2" name="review[rating]" value="2"><label for="first-rate2">2 stars</label>
-                <input type="radio" id="first-rate3" name="review[rating]" value="3"><label for="first-rate3">3 stars</label>
-                <input type="radio" id="first-rate4" name="review[rating]" value="4"><label for="first-rate4">4 stars</label>
-                <input type="radio" id="first-rate5" name="review[rating]" value="5"><label for="first-rate5">5 stars</label>
-              </fieldset>
-            </div>
-            <div class="mb-3">
-              <label for="comment"><b>Comment</b></label>
-              <textarea name="review[comment]" id="comment" rows="5" class="form-control" required></textarea>
-              <div class="invalid-feedback">Please give a comment</div>
-            </div>
-            <button type="submit" class="btn btn-outline-dark">Submit</button>
-          </form>
-        </div>
+    <div class="row my-5">
+      <div class="col-lg-8">
+        <h3><b>Leave a review</b></h3>
+        <form
+          action="/listings/<%= listing._id %>/reviews"
+          method="POST"
+          class="needs-validation"
+          novalidate
+        >
+          <div class="mb-3">
+            <label for="rating"><b>Rating</b></label>
+            <fieldset class="starability-slot">
+              <input
+                type="radio"
+                id="no-rate"
+                class="input-no-rate"
+                name="review[rating]"
+                value="1"
+                checked
+                aria-label="No rating."
+              />
+              <input
+                type="radio"
+                id="first-rate1"
+                name="review[rating]"
+                value="1"
+              /><label for="first-rate1">1 star</label>
+              <input
+                type="radio"
+                id="first-rate2"
+                name="review[rating]"
+                value="2"
+              /><label for="first-rate2">2 stars</label>
+              <input
+                type="radio"
+                id="first-rate3"
+                name="review[rating]"
+                value="3"
+              /><label for="first-rate3">3 stars</label>
+              <input
+                type="radio"
+                id="first-rate4"
+                name="review[rating]"
+                value="4"
+              /><label for="first-rate4">4 stars</label>
+              <input
+                type="radio"
+                id="first-rate5"
+                name="review[rating]"
+                value="5"
+              /><label for="first-rate5">5 stars</label>
+            </fieldset>
+          </div>
+          <div class="mb-3">
+            <label for="comment"><b>Comment</b></label>
+            <textarea
+              name="review[comment]"
+              id="comment"
+              rows="5"
+              class="form-control"
+              required
+            ></textarea>
+            <div class="invalid-feedback">Please give a comment</div>
+          </div>
+          <button type="submit" class="btn btn-outline-dark">Submit</button>
+        </form>
       </div>
+    </div>
     <% } %>
 
     <!-- REVIEWS SECTION -->
     <% if (listing.reviews.length > 0) { %>
-      <div class="row mb-5">
-        <div class="col-lg-8">
-          <h3><b>Reviews</b></h3>
-          <% for (review of listing.reviews) { %>
-            <div class="card review-card mb-3">
-              <div class="card-body">
-                <h5 class="card-title">@<%= review.author.username %></h5>
-                <p class="starability-result" data-rating="<%= review.rating %>"></p>
-                <p class="card-text"><%= review.comment %></p>
-                <% if (currUser && currUser._id.equals(review.author._id)) { %>
-                  <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=delete" method="post">
-                    <button class="btn btn-sm btn-danger">Delete</button>
-                  </form>
-                <% } %>
-              </div>
-            </div>
-          <% } %>
+    <div class="row mb-5">
+      <div class="col-lg-8">
+        <h3><b>Reviews</b></h3>
+        <% for (review of listing.reviews) { %>
+        <div class="card review-card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">@<%= review.author.username %></h5>
+            <p
+              class="starability-result"
+              data-rating="<%= review.rating %>"
+            ></p>
+            <p class="card-text"><%= review.comment %></p>
+            <% if (currUser && currUser._id.equals(review.author._id)) { %>
+            <form
+              action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=delete"
+              method="post"
+            >
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </form>
+            <% } %>
+          </div>
         </div>
+        <% } %>
       </div>
+    </div>
     <% } %>
   </div>
 
@@ -215,22 +372,22 @@
 </body>
 
 <script>
-  const checkIn = document.getElementById('checkIn');
-  const checkOut = document.getElementById('checkOut');
-  const guestsSlider = document.getElementById('guestsSlider');
-  const guestCountDisplay = document.getElementById('guestCount');
+  const checkIn = document.getElementById("checkIn");
+  const checkOut = document.getElementById("checkOut");
+  const guestsSlider = document.getElementById("guestsSlider");
+  const guestCountDisplay = document.getElementById("guestCount");
 
-  const today = new Date().toISOString().split('T')[0];
-  checkIn.setAttribute('min', today);
+  const today = new Date().toISOString().split("T")[0];
+  checkIn.setAttribute("min", today);
 
-  checkIn.addEventListener('change', function () {
+  checkIn.addEventListener("change", function () {
     const minCheckoutDate = new Date(this.value);
     minCheckoutDate.setDate(minCheckoutDate.getDate() + 1);
-    const formattedCheckoutMin = minCheckoutDate.toISOString().split('T')[0];
-    checkOut.setAttribute('min', formattedCheckoutMin);
+    const formattedCheckoutMin = minCheckoutDate.toISOString().split("T")[0];
+    checkOut.setAttribute("min", formattedCheckoutMin);
   });
 
-  guestsSlider.addEventListener('input', function () {
+  guestsSlider.addEventListener("input", function () {
     guestCountDisplay.textContent = this.value;
   });
 </script>

@@ -161,24 +161,27 @@ module.exports.show = async (req, res) => {
   let listing = await Listing.findById(id)
     .populate({
       path: "reviews",
-      populate: {
-        path: "author",
-      },
+      populate: { path: "author" },
     })
     .populate("owner");
+
   if (!listing) {
     req.flash("error", "No such listing exists!");
-    res.redirect("/listings");
+    return res.redirect("/listings");
   }
+
   let booking = null;
   if (req.user) {
     booking = await Booking.findOne({
       listing: id,
-      user: req.user._id
-    });
+      user: req.user._id,
+      status: { $in: ["pending", "confirmed"] },
+    }).sort({ createdAt: -1 });
   }
+
   res.render("listings/show.ejs", {
     listing,
+    currUser: req.user,
     booking,
     searchQuery: "",
     category: [
