@@ -26,7 +26,7 @@ module.exports.index = async (req, res) => {
         filters.category = category; // Match exact category
       }
 
-      listings = await Listing.find(filters);
+      listings = await Listing.find(filters).populate("reviews");
     } else {
       // Fetch all listings if no filters
       listings = await Listing.find();
@@ -169,6 +169,13 @@ module.exports.show = async (req, res) => {
     req.flash("error", "No such listing exists!");
     return res.redirect("/listings");
   }
+  const existingBookings = await Booking.find(
+    {
+      listing: id,
+      status: "confirmed",
+    },
+    "checkIn checkOut"
+  );
 
   let booking = null;
   if (req.user) {
@@ -183,6 +190,7 @@ module.exports.show = async (req, res) => {
     listing,
     currUser: req.user,
     booking,
+    existingBookings,
     searchQuery: "",
     category: [
       "Trendings",

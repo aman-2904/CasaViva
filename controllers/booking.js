@@ -5,14 +5,30 @@ module.exports.create = async (req, res) => {
   try {
     const listingId = req.params.id;
     const userId = req.user._id;
-
     const { checkIn, checkOut, guests } = req.body;
+
+    const newCheckIn = new Date(checkIn);
+    const newCheckOut = new Date(checkOut);
+
+    // 🔒 Check for conflicts
+    const conflict = await Booking.findOne({
+      listing: listingId,
+      status: { $in: ["pending", "confirmed"] },
+      $or: [
+        { checkIn: { $lt: newCheckOut }, checkOut: { $gt: newCheckIn } }
+      ]
+    });
+
+    if (conflict) {
+      req.flash("error", "This listing is already booked for the selected dates.");
+      return res.redirect(`/listings/${listingId}`);
+    }
 
     const booking = new Booking({
       listing: listingId,
       user: userId,
-      checkIn: new Date(checkIn),
-      checkOut: new Date(checkOut),
+      checkIn: newCheckIn,
+      checkOut: newCheckOut,
       guests: parseInt(guests),
       status: "pending"
     });
@@ -26,6 +42,7 @@ module.exports.create = async (req, res) => {
     res.redirect("back");
   }
 };
+
 
 module.exports.confirm = async (req, res) => {
   const { id } = req.params;

@@ -166,18 +166,19 @@
         { name: 'Farms', icon: 'fa-tractor' },
         { name: 'Arctic', icon: 'fa-snowflake', regular: true }
       ]; %>
-
       <% categories.forEach(cat => { %>
         <div class="filter">
           <a href="/listings?category=<%= cat.name %>" class="btn btn-category">
-            <div><i class="<%= cat.brand ? 'fa-brands' : cat.regular ? 'fa-regular' : 'fa-solid' %> <%= cat.icon %>"></i></div>
+            <div>
+              <i class="<%= cat.brand ? 'fa-brands' : cat.regular ? 'fa-regular' : 'fa-solid' %> <%= cat.icon %>"></i>
+            </div>
             <p><%= cat.name %></p>
           </a>
         </div>
       <% }) %>
     </div>
   </div>
-  
+
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 mt-3">
     <% if (listings.length === 0) { %>
       <h2 class="col-12 text-center">No listings found.</h2>
@@ -196,7 +197,20 @@
               <div class="card-body px-3 pt-3 pb-2">
                 <div class="d-flex justify-content-between text-muted small mb-1">
                   <div><i class="fa-solid fa-location-dot me-1"></i> <%= listing.location %></div>
-                  <div><i class="fa-solid fa-star text-warning me-1"></i> 4.8 <span class="text-muted">(89)</span></div>
+                  <div>
+                    <% if (listing.reviews && listing.reviews.length > 0) { 
+                      let validRatings = listing.reviews
+                        .map(r => parseFloat(r.rating))
+                        .filter(rating => !isNaN(rating));
+                      let total = validRatings.reduce((sum, r) => sum + r, 0);
+                      let avg = validRatings.length > 0 ? (total / validRatings.length).toFixed(1) : "N/A";
+                    %>
+                      <i class="fa-solid fa-star text-warning me-1"></i> <%= avg %>
+                      <span class="text-muted">(<%= listing.reviews.length %>)</span>
+                    <% } else { %>
+                      <span class="text-muted">No reviews</span>
+                    <% } %>
+                  </div>
                 </div>
                 <h6 class="fw-bold text-dark"><%= listing.title %></h6>
                 <div class="text-muted small mb-2">
@@ -209,7 +223,9 @@
                   <span class="badge bg-light border text-muted">+5 more</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
-                  <div class="fw-bold fs-6 text-dark">&#8377;<%= listing.price.toLocaleString("en-IN") %> <span class="text-muted fs-6">/ night</span></div>
+                  <div class="fw-bold fs-6 text-dark">
+                    ₹<%= listing.price.toLocaleString("en-IN") %> <span class="text-muted fs-6">/ night</span>
+                  </div>
                   <a href="/listings/<%= listing._id %>" class="btn btn-sm btn-primary rounded-pill px-3 view-details-btn" style="background-color: #e91e63; border: none;">
                     View Details
                   </a>

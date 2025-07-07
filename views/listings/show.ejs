@@ -2,6 +2,7 @@
 <script>
   const mapToken = "<%= process.env.MAP_TOKEN %>";
   const listing = <%- JSON.stringify(listing) %>;
+  const existingBookings = <%- JSON.stringify(existingBookings) %>;
 </script>
 
 <style>
@@ -37,12 +38,13 @@
   }
 
   .change {
-    background-color: #dc3545;
-    border: #dc3545;
+    background-color: #dc3545 !important ;
+    border: #dc3545 !important;
+    text: white !important;
   }
 
   .change:hover {
-    background-color: #dc3545;
+    background-color: #dc3545 !important;
     opacity: 0.9;
   }
 
@@ -123,14 +125,16 @@
       <!-- SIDEBAR: Reservation + Host -->
       <div class="col-lg-4 col-12">
         <div class="position-sticky" style="top: 100px">
-          <% if (currUser && !listing.owner._id.equals(currUser._id)) { %> <% if
+          <% if (currUser && !listing.owner._id.equals(currUser._id)) { const
+          now = new Date(); let checkOutDate; let isPastBooking = false; if
+          (booking && booking.checkOut) { checkOutDate = new
+          Date(booking.checkOut); isPastBooking = now > checkOutDate; } %> <% if
           (booking && (booking.status === 'confirmed' || booking.status ===
-          'pending')) { const checkInDate = new Date(booking.checkIn); const
-          checkOutDate = new Date(booking.checkOut); const nights =
-          Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)); const
-          subtotal = listing.price * nights; const tax = subtotal * 0.18; const
-          platformFee = subtotal * 0.10; const total = subtotal + tax +
-          platformFee; %>
+          'pending') && !isPastBooking) { const checkInDate = new
+          Date(booking.checkIn); const nights = Math.ceil((checkOutDate -
+          checkInDate) / (1000 * 60 * 60 * 24)); const subtotal = listing.price
+          * nights; const tax = subtotal * 0.18; const platformFee = subtotal *
+          0.10; const total = subtotal + tax + platformFee; %>
           <!-- Reservation Detail Card -->
           <div class="card p-4 shadow-sm mb-3 border-0 bg-light rounded-4">
             <h4 class="mb-3">
@@ -141,40 +145,44 @@
               <span
                 ><i class="bi bi-calendar-event"></i>
                 <strong>Check-In:</strong></span
-              ><span class="text-muted"><%= checkInDate.toDateString() %></span>
+              >
+              <span class="text-muted"><%= checkInDate.toDateString() %></span>
             </div>
             <div class="d-flex justify-content-between mb-2">
               <span
                 ><i class="bi bi-calendar-event-fill"></i>
                 <strong>Check-Out:</strong></span
-              ><span class="text-muted"
-                ><%= checkOutDate.toDateString() %></span
               >
+              <span class="text-muted"><%= checkOutDate.toDateString() %></span>
             </div>
             <div class="d-flex justify-content-between mb-3">
               <span
                 ><i class="bi bi-people-fill"></i>
                 <strong>Guests:</strong></span
-              ><span class="text-muted"><%= booking.guests %></span>
+              >
+              <span class="text-muted"><%= booking.guests %></span>
             </div>
             <hr class="my-3" />
             <div class="d-flex justify-content-between mb-2">
               <span
                 >₹<%= listing.price.toLocaleString() %> x <%= nights %>
                 nights</span
-              ><span>₹<%= subtotal.toFixed(2) %></span>
+              >
+              <span>₹<%= subtotal.toFixed(2) %></span>
             </div>
             <div class="d-flex justify-content-between mb-2">
-              <span>Tax (18%)</span><span>₹<%= tax.toFixed(2) %></span>
+              <span>Tax (18%)</span>
+              <span>₹<%= tax.toFixed(2) %></span>
             </div>
             <div class="d-flex justify-content-between mb-3">
-              <span>Platform Fee (10%)</span
-              ><span>₹<%= platformFee.toFixed(2) %></span>
+              <span>Platform Fee (10%)</span>
+              <span>₹<%= platformFee.toFixed(2) %></span>
             </div>
             <div
               class="d-flex justify-content-between border-top pt-3 fw-bold fs-5"
             >
-              <span>Total</span><span>₹<%= total.toFixed(2) %></span>
+              <span>Total</span>
+              <span>₹<%= total.toFixed(2) %></span>
             </div>
             <p class="mt-3 text-muted small text-center">
               <i class="bi bi-info-circle"></i> Status:
@@ -195,10 +203,9 @@
           >
             <div class="card p-4 shadow-sm mb-3">
               <h4>
-                <b>&#8377;<%= listing.price.toLocaleString("en-IN") %></b>
-                <small class="text-muted">night</small>
+                <b>₹<%= listing.price.toLocaleString("en-IN") %></b>
+                <small class="text-muted">/night</small>
               </h4>
-              <p><i class="bi bi-star-fill text-warning"></i> 4.8</p>
               <div class="mb-2">
                 <label class="form-label">Check-In</label>
                 <input
@@ -233,7 +240,14 @@
                   class="form-range"
                 />
               </div>
-              <button class="btn change btn-primary w-100" type="submit">
+              <div class="mb-3 total-display">
+                Total: ₹<span id="totalPrice">0</span>
+              </div>
+              <button
+                class="btn change btn-primary w-100"
+                id="reserveBtn"
+                disabled
+              >
                 Reserve Now
               </button>
               <p class="text-muted mt-2 text-center small">
@@ -372,22 +386,77 @@
 </body>
 
 <script>
-  const checkIn = document.getElementById("checkIn");
-  const checkOut = document.getElementById("checkOut");
+  const pricePerNight = Number("<%= listing.price %>");
+  const checkInEl = document.getElementById("checkIn");
+  const checkOutEl = document.getElementById("checkOut");
   const guestsSlider = document.getElementById("guestsSlider");
   const guestCountDisplay = document.getElementById("guestCount");
+  const totalPriceEl = document.getElementById("totalPrice");
+  const reserveBtn = document.getElementById("reserveBtn");
 
-  const today = new Date().toISOString().split("T")[0];
-  checkIn.setAttribute("min", today);
+  // 1. Disable past dates for check-in
+  const todayStr = new Date().toISOString().split("T")[0];
+  checkInEl.min = todayStr;
 
-  checkIn.addEventListener("change", function () {
-    const minCheckoutDate = new Date(this.value);
-    minCheckoutDate.setDate(minCheckoutDate.getDate() + 1);
-    const formattedCheckoutMin = minCheckoutDate.toISOString().split("T")[0];
-    checkOut.setAttribute("min", formattedCheckoutMin);
+  // 2. Create a set of booked date strings
+  const disabledDates = new Set();
+  existingBookings.forEach((booking) => {
+    let curr = new Date(booking.checkIn);
+    let end = new Date(booking.checkOut);
+    while (curr <= end) {
+      disabledDates.add(curr.toISOString().split("T")[0]);
+      curr.setDate(curr.getDate() + 1);
+    }
   });
 
-  guestsSlider.addEventListener("input", function () {
-    guestCountDisplay.textContent = this.value;
+  function isRangeAvailable(start, end) {
+    const curr = new Date(start);
+    const out = new Date(end);
+    while (curr < out) {
+      const dStr = curr.toISOString().split("T")[0];
+      if (disabledDates.has(dStr)) return false;
+      curr.setDate(curr.getDate() + 1);
+    }
+    return true;
+  }
+
+  function validateDates() {
+    const ci = checkInEl.value;
+    const co = checkOutEl.value;
+    if (!ci || !co) {
+      totalPriceEl.textContent = "0";
+      reserveBtn.disabled = true;
+      return;
+    }
+
+    const ciDate = new Date(ci);
+    const coDate = new Date(co);
+
+    if (coDate <= ciDate || !isRangeAvailable(ci, co)) {
+      totalPriceEl.textContent = "0";
+      reserveBtn.disabled = true;
+      return;
+    }
+
+    const nights = (coDate - ciDate) / (1000 * 60 * 60 * 24);
+    const total = nights * pricePerNight;
+    totalPriceEl.textContent = total.toLocaleString("en-IN");
+    reserveBtn.disabled = false;
+  }
+
+  checkInEl.addEventListener("change", () => {
+    const minOut = new Date(checkInEl.value);
+    minOut.setDate(minOut.getDate() + 1);
+    checkOutEl.min = minOut.toISOString().split("T")[0];
+    validateDates();
   });
+
+  checkOutEl.addEventListener("change", validateDates);
+
+  guestsSlider.addEventListener("input", () => {
+    guestCountDisplay.textContent = guestsSlider.value;
+  });
+
+  // Disable reserve button initially
+  reserveBtn.disabled = true;
 </script>
