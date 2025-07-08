@@ -42,12 +42,6 @@
 
 ---
 
-## 🖼️ Screenshots
-
-> Add screenshots of your listing page, booking form, host dashboard, etc. in a `/screenshots` folder and embed them here.
-
----
-
 ## 🛠️ Getting Started
 
 ### ⚙️ Installation
@@ -101,6 +95,4 @@ This project is licensed under the MIT License.
 
 🙋‍♂️ About Me
 Pratham Raghuvanshi
-📫 Connect on LinkedIn
-💻 More Projects
 
