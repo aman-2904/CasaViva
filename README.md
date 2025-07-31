@@ -50,22 +50,34 @@
 git clone https://github.com/Pratham22R/wanderlust_website.git
 cd wanderlust_website
 npm install
+```
 
+---
 
-📦 Environment Variables
+## 📦 Environment Variables
+
 Create a .env file in the root directory with the following:
 
+```bash
 env
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_KEY=your_cloudinary_key
 CLOUDINARY_SECRET=your_cloudinary_secret
 MAP_TOKEN=your_mapbox_token
+```
 
-▶️ Run the App
+---
+
+## ▶️ Run the App
+```bash
 nodemon app.js
+```
 Visit http://localhost:3000 to explore.
 
-📁 Project Structure
+---
+
+## 📁 Project Structure
+```bash
 wanderlust_website/
 │
 ├── controllers/        # Route logic (bookings, listings, user, etc.)
@@ -77,8 +89,11 @@ wanderlust_website/
 ├── cloudConfig.js      # Cloudinary setup
 ├── middleware.js       # Custom middleware
 └── app.js              # Main Express app
+```
+---
 
-🧠 Learnings & Highlights
+## 🧠 Learnings & Highlights
+
 Implemented real-time date blocking for bookings using backend logic
 
 Built reusable middleware for user and host auth flows
@@ -87,12 +102,22 @@ Designed modular MVC structure for scalability
 
 Deployed a production-grade app on Render with persistent cloud storage
 
-💬 Feedback & Contributions
+---
+
+## 💬 Feedback & Contributions
 I'm open to feedback and ideas! If you'd like to contribute or suggest an improvement, feel free to open an issue or pull request.
 
-📜 License
+---
+
+## 📜 License
 This project is licensed under the MIT License.
+
+---
 
 🙋‍♂️ About Me
 Pratham Raghuvanshi
+🌐 Website: https://pratham-portfolio-op6k.onrender.com/
 
+---
+
+Made with ❤️ by Pratham
