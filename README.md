@@ -105,17 +105,21 @@ Deployed a production-grade app on Render with persistent cloud storage
 ---
 
 ## 💬 Feedback & Contributions
+
 I'm open to feedback and ideas! If you'd like to contribute or suggest an improvement, feel free to open an issue or pull request.
 
 ---
 
 ## 📜 License
+
 This project is licensed under the MIT License.
 
 ---
 
 🙋‍♂️ About Me
+
 Pratham Raghuvanshi
+
 🌐 Website: https://pratham-portfolio-op6k.onrender.com/
 
 ---
