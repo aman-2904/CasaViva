@@ -1,4 +1,4 @@
-# 🌍 WanderLust
+# 🌍 CasaViva
 
 WanderLust is a full-stack travel listing application built with **Node.js**, **Express**, **MongoDB**, and **EJS**. It allows users to browse, create, and manage travel destination listings.
 
