@@ -1,6 +1,6 @@
-# 🌍 Wanderlust — Travel Stay Booking Platform
+# 🌍 CasaViva — Travel Stay Booking Platform
 
-> A full-stack web application inspired by Airbnb. Wanderlust allows users to explore, book, and host vacation stays with a user-friendly interface and robust backend logic.
+> A full-stack web application inspired by Airbnb. CasaViva allows users to explore, book, and host vacation stays with a user-friendly interface and robust backend logic.
 
 ## 🚀 Live Site
 
@@ -47,8 +47,7 @@
 ### ⚙️ Installation
 
 ```bash
-git clone https://github.com/Pratham22R/wanderlust_website.git
-cd wanderlust_website
+git clone https://github.com/aman-2904/CasaViva.git
 npm install
 ```
 
@@ -70,7 +69,7 @@ MAP_TOKEN=your_mapbox_token
 
 ## ▶️ Run the App
 ```bash
-nodemon app.js
+npm start
 ```
 Visit http://localhost:3000 to explore.
 
@@ -118,10 +117,10 @@ This project is licensed under the MIT License.
 
 🙋‍♂️ About Me
 
-Pratham Raghuvanshi
+Aman Jha
 
-🌐 Website: https://pratham-portfolio-op6k.onrender.com/
+🌐 Website: 
 
 ---
 
-Made with ❤️ by Pratham
+Made by Aman Jha
