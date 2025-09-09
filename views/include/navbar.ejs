@@ -1,207 +1,176 @@
 <style>
-  .navbar {
-    background-color: #fe424d !important;
-    z-index: 9999;
-  }
-
-  .navbar-brand {
-    font-weight: bold;
-    font-size: 1.8rem;
-    color: white !important;
-  }
-
-  .nav-link {
-    font-weight: 500;
-    color: white !important;
-    transition: color 0.3s ease;
-  }
-
-  .search-ip {
-    background-color: #fff;
-    border-radius: 2rem;
-    padding: 0.6rem 1rem;
-    font-size: 1rem;
-    color: #fe424d;
-    border: 1px solid #fff;
-    width: 100%;
-  }
-
-  .search-ip::placeholder {
-    color: #fe424d;
-    font-weight: 500;
-  }
-
-  .btn-search {
-    background-color: transparent;
-    border: 1px solid white;
-    border-radius: 2rem;
-    padding: 0.5rem 1.2rem;
-    color: #fff;
-    transition: all 0.3s ease;
-  }
-
-  .btn-search:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-
-  @media (max-width: 991.98px) {
-    .offcanvas-header {
-      background-color: #fe424d;
-      color: white;
+    .navbar {
+        background-color: #fe424d !important;
+        z-index: 9999;
     }
 
-    .offcanvas-body {
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .offcanvas-body form,
-    .offcanvas-body ul {
-      width: 100%;
-    }
-
-    .offcanvas-body .nav-link {
-      color: #fe424d !important;
-    }
-
-    .offcanvas-body .btn-search {
-      border-color: #fe424d;
-      color: #fe424d;
-    }
-
-    .offcanvas-body .search-ip {
-      border-color: #fe424d;
-    }
-
-    .dropdown-menu {
-      width: 100%;
-    }
-
-    .dropdown-menu .dropdown-item {
-      font-weight: 500;
+    .navbar-brand {
+        font-weight: bold;
+        font-size: 1.8rem;
+        color: white !important;
     }
 
     .nav-link {
-      font-weight: 500;
-      color: white !important;
-      transition: color 0.3s ease;
+        font-weight: 500;
+        color: white !important;
+        transition: color 0.3s ease;
     }
-    .nav-link:hover {
-      text-decoration: none !important;
+
+    .search-ip {
+        background-color: #fff;
+        border-radius: 2rem;
+        padding: 0.6rem 1rem;
+        font-size: 1rem;
+        color: #fe424d;
+        border: 1px solid #fff;
+        width: 100%;
     }
-    .nav-item{
-      padding-right: 2rem !important;
+
+    .search-ip::placeholder {
+        color: #fe424d;
+        font-weight: 500;
     }
-  }
+
+    .btn-search {
+        background-color: transparent;
+        border: 1px solid white;
+        border-radius: 2rem;
+        padding: 0.5rem 1.2rem;
+        color: #fff;
+        transition: all 0.3s ease;
+    }
+
+    .btn-search:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 991.98px) {
+        .offcanvas-header {
+            background-color: #fe424d;
+            color: white;
+        }
+
+        .offcanvas-body {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .offcanvas-body form,
+        .offcanvas-body ul {
+            width: 100%;
+        }
+
+        .offcanvas-body .nav-link {
+            color: #fe424d !important;
+        }
+
+        .offcanvas-body .btn-search {
+            border-color: #fe424d;
+            color: #fe424d;
+        }
+
+        .offcanvas-body .search-ip {
+            border-color: #fe424d;
+        }
+
+        .dropdown-menu {
+            width: 100%;
+        }
+
+        .dropdown-menu .dropdown-item {
+            font-weight: 500;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: white !important;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            text-decoration: none !important;
+        }
+
+        .nav-item {
+            padding-right: 2rem !important;
+        }
+    }
 </style>
 
 <nav class="navbar navbar-expand-lg sticky-top shadow">
-  <div class="container-fluid px-3">
-    <!-- Brand -->
-    <a class="navbar-brand" href="/">Wanderlust</a>
+    <div class="container-fluid px-3">
+        <!-- Brand -->
+        <a class="navbar-brand" href="/">CasaViva</a>
 
-    <!-- Toggle Button -->
-    <button
-      class="navbar-toggler border-0"
-      type="button"
-      data-bs-toggle="offcanvas"
-      data-bs-target="#navbarCollapse"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
+        <!-- Toggle Button -->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <!-- Offcanvas Menu for Mobile -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="navbarCollapse">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title">Menu</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="offcanvas"
-          aria-label="Close"
-        ></button>
-      </div>
+        <!-- Offcanvas Menu for Mobile -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="navbarCollapse">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">Menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
 
-      <div
-        class="offcanvas-body d-flex flex-column flex-lg-row align-items-lg-center w-100"
-      >
-        <!-- Links (Explore / Host Home / My Bookings) -->
-        <ul
-          class="navbar-nav mb-3 mb-lg-0 me-lg-3 d-flex flex-column flex-lg-row w-100 gap-2 gap-lg-0"
-        >
-          <% if (currUser && currUser.role === 'guest') { %>
-          <li class="nav-item">
-            <a class="nav-link" href="/listings">Explore</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/booking/my">
-              <i class="fa-solid fa-calendar-check me-1"></i> My Bookings
-            </a>
-          </li>
-          <% } %> <% if (currUser && currUser.role === 'host') { %>
-          <li class="nav-item ">
-            <a class="nav-link" href="/listings/new"><b>Add your home</b></a>
-          </li>
-          <% } %>
-        </ul>
+            <div class="offcanvas-body d-flex flex-column flex-lg-row align-items-lg-center w-100">
+                <!-- Links (Explore / Host Home / My Bookings) -->
+                <ul class="navbar-nav mb-3 mb-lg-0 me-lg-3 d-flex flex-column flex-lg-row w-100 gap-2 gap-lg-0">
+                    <% if (typeof currUser !== 'undefined' && currUser && currUser.role === 'guest') { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/listings">Explore</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/booking/my">
+                            <i class="fa-solid fa-calendar-check me-1"></i> My Bookings
+                        </a>
+                    </li>
+                    <% } %> <% if (typeof currUser !== 'undefined' && currUser && currUser.role === 'host') { %>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/listings/new"><b>Add your home</b></a>
+                    </li>
+                    <% } %>
+                </ul>
 
-        <!-- Search Form -->
-        <form
-          class="d-flex mb-3 mb-lg-0 w-100"
-          role="search"
-          action="/listings"
-          method="GET"
-        >
-          <input
-            class="form-control me-2 search-ip"
-            type="search"
-            name="query"
-            placeholder="Search location"
-            value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
-            required
-          />
-          <button class="btn btn-search" type="submit">
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </button>
-        </form>
-        <!-- Auth Links -->
-        <ul
-          class="navbar-nav d-flex flex-column flex-lg-row ms-lg-3 align-items-lg-center gap-2 gap-lg-3"
-        >
-          <% if (!currUser) { %>
-          <!-- Signup Dropdown -->
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-            >
-              <b>Sign Up</b>
-            </a>
-            <ul class="dropdown-menu">
-              <li>
-                <a class="dropdown-item" href="/signup/guest">Guest Sign Up</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="/signup/host">Host Sign Up</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/login"><b>Login</b></a>
-          </li>
-          <% } else { %> <% if (currUser.role === 'host') { %>
-          <li class="nav-item">
-            <a class="nav-link" href="/host/dashboard"><b>Dashboard</b></a>
-          </li>
-          <% } %>
-          <li class="nav-item">
-            <a class="nav-link text-white" href="/logout"><b>Logout</b></a>
-          </li>
-          <% } %>
-        </ul>
-      </div>
+                <!-- Search Form -->
+                <form class="d-flex mb-3 mb-lg-0 w-100" role="search" action="/listings" method="GET">
+                    <input class="form-control me-2 search-ip" type="search" name="query" placeholder="Search location" value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>" required />
+                    <button class="btn btn-search" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
+                <!-- Auth Links -->
+                <ul class="navbar-nav d-flex flex-column flex-lg-row ms-lg-3 align-items-lg-center gap-2 gap-lg-3">
+                    <% if (typeof currUser === 'undefined' || !currUser) { %>
+                    <!-- Signup Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <b>Sign Up</b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="/signup/guest">Guest Sign Up</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/signup/host">Host Sign Up</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login"><b>Login</b></a>
+                    </li>
+                    <% } else { %> <% if (typeof currUser !== 'undefined' && currUser && currUser.role === 'host') { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/host/dashboard"><b>Dashboard</b></a>
+                    </li>
+                    <% } %>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/logout"><b>Logout</b></a>
+                    </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
     </div>
-  </div>
 </nav>

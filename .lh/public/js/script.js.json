@@ -1,0 +1,18 @@
+{
+    "sourceFile": "public/js/script.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1757157238912,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1757157238912,
+            "name": "Commit-0",
+            "content": "(() => {\n    'use strict'\n  \n    // Fetch all the forms we want to apply custom Bootstrap validation styles to\n    const forms = document.querySelectorAll('.needs-validation')\n  \n    // Loop over them and prevent submission\n    Array.from(forms).forEach(form => {\n      form.addEventListener('submit', event => {\n        if (!form.checkValidity()) {\n          event.preventDefault()\n          event.stopPropagation()\n        }\n  \n        form.classList.add('was-validated')\n      }, false)\n    })\n  })()\n\n// Check if the taxSwitch element exists before adding event listener\nlet taxSwitch = document.getElementById(\"flexSwitchCheckDefault\")\nif (taxSwitch) {\n  taxSwitch.addEventListener(\"click\", () => {\n    let taxInfo = document.getElementsByClassName(\"tax-info\")\n    for (info of taxInfo) {\n      if (info.style.display != \"inline\") {\n        info.style.display = \"inline\"\n      } else {\n        info.style.display = \"none\"\n      }\n    }\n  })\n}"
+        }
+    ]
+}

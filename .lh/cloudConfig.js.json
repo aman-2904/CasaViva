@@ -1,0 +1,18 @@
+{
+    "sourceFile": "cloudConfig.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1757158244278,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1757158244278,
+            "name": "Commit-0",
+            "content": "const cloudinary = require(\"cloudinary\").v2;\nconst { CloudinaryStorage } = require(\"multer-storage-cloudinary\");\n\ncloudinary.config({\n  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,\n  api_key: process.env.CLOUDINARY_KEY,\n  api_secret: process.env.CLOUDINARY_SECRET,\n});\n\nconst storage = new CloudinaryStorage({\n  cloudinary: cloudinary,\n  params: {\n    folder: \"wanderlust_DEV\",\n    allowedFormats: [\"jpg\", \"png\", \"jpeg\"], // supports promises as well\n  },\n});\n\nmodule.exports = {\n  cloudinary,\n  storage,\n};"
+        }
+    ]
+}

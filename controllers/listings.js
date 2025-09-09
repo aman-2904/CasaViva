@@ -69,31 +69,44 @@ module.exports.new = (req, res) => {
 
 // CREATE
 module.exports.create = async (req, res, next) => {
-  let response = await geocodingClient
-    .forwardGeocode({
-      query: req.body.listing.location,
-      limit: 1,
-    })
-    .send();
-  let url = req.file.path;
-  let filename = req.file.filename;
-  const listingData = req.body.listing;
+  try {
+    // Check if file was uploaded
+    if (!req.file) {
+      req.flash("error", "Please upload an image for your listing");
+      return res.redirect("/listings/new");
+    }
 
-  // Ensure `image` is always an object with default properties
-  if (!listingData.image) {
-    listingData.image = {
-      url: "https://media.cntraveler.com/photos/53da60a46dec627b149e66f4/master/w_1600%2Cc_limit/hilton-moorea-lagoon-resort-spa-moorea-french-poly--110160-1.jpg",
-      filename: "default.jpg",
+    let response = await geocodingClient
+      .forwardGeocode({
+        query: req.body.listing.location,
+        limit: 1,
+      })
+      .send();
+
+    const listingData = req.body.listing;
+
+    // Create new listing
+    let newlisting = new Listing(listingData);
+    newlisting.owner = req.user._id;
+    newlisting.image = {
+      url: req.file.path,
+      filename: req.file.filename
     };
+    
+    // Add geometry from Mapbox
+    if (response.body.features && response.body.features.length > 0) {
+      newlisting.geometry = response.body.features[0].geometry;
+    }
+
+    let savedListing = await newlisting.save();
+    console.log(savedListing);
+    req.flash("success", "New Listing Created!");
+    res.redirect("/host/dashboard");
+  } catch (error) {
+    console.error("Error creating listing:", error);
+    req.flash("error", "Error creating listing. Please try again.");
+    res.redirect("/listings/new");
   }
-  let newlisting = new Listing(req.body.listing);
-  newlisting.owner = req.user._id;
-  newlisting.image = { url, filename };
-  newlisting.geometry = response.body.features[0].geometry;
-  let savedListing = await newlisting.save();
-  console.log(savedListing);
-  req.flash("success", "New Listing Created!");
-  res.redirect("/host/dashboard");
 };
 
 //EDIT
@@ -128,23 +141,26 @@ module.exports.edit = async (req, res) => {
 module.exports.update = async (req, res) => {
   let { id } = req.params;
   const { listing } = req.body;
-  let updateListing = await Listing.findByIdAndUpdate(id, req.body.listing);
+  
+  try {
+    let updateListing = await Listing.findByIdAndUpdate(id, listing, { new: true });
 
-  // Ensure `image` is an object
-  if (listing.image) {
-    listing.image = {
-      url: listing.image.url || "https://default-image-url.com/default.jpg",
-      filename: listing.image.filename || "default.jpg",
-    };
+    // Update image if a new one was uploaded
+    if (req.file) {
+      updateListing.image = {
+        url: req.file.path,
+        filename: req.file.filename
+      };
+      await updateListing.save();
+    }
+    
+    req.flash("success", "Listing Updated!");
+    res.redirect(`/listings/${id}`);
+  } catch (error) {
+    console.error("Error updating listing:", error);
+    req.flash("error", "Error updating listing. Please try again.");
+    res.redirect(`/listings/${id}/edit`);
   }
-  if (typeof req.file !== "undefined") {
-    let url = req.file.path;
-    let filename = req.file.filename;
-    updateListing.image = { url, filename };
-    await updateListing.save();
-  }
-  req.flash("success", "Listing Updated!");
-  res.redirect(`/listings/${id}`);
 };
 
 //DELETE
